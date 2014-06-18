@@ -8,7 +8,7 @@ import org.junit.*;
 public class SupermarketCheckoutRepositoryTest {
 
 	private Database database = new Database(new PropertyFileDatabaseConfiguration("database.properties"));
-	SupermarketCheckoutRepository repository = new SupermarketCheckoutRepository(database);
+	CheckoutRepository repository = new CheckoutRepository(database);
 
 	@Test
 	public void findsCheckouts() throws Exception {
@@ -16,7 +16,7 @@ public class SupermarketCheckoutRepositoryTest {
 		assertEquals("id 1", 1, repository.findById(1).id());
 	}
 
-	@Test(expected=SupermarketCheckoutRepository.CheckoutNotFound.class)
+	@Test(expected=CheckoutRepository.CheckoutNotFound.class)
 	public void checkoutNotFound() throws Exception {
 		repository.findById(99);
 	}

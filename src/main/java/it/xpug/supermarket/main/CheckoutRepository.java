@@ -2,11 +2,11 @@ package it.xpug.supermarket.main;
 
 import it.xpug.generic.db.*;
 
-public class SupermarketCheckoutRepository {
+public class CheckoutRepository {
 
 	private Database database;
 
-	public SupermarketCheckoutRepository(Database database) {
+	public CheckoutRepository(Database database) {
 		this.database = database;
 	}
 

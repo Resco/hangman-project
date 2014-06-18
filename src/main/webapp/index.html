@@ -19,7 +19,7 @@
       }
 
       function on_scan_error(data) {
-        $("#display").text(data.responseJSON.description || "Price Not Found");
+        $("#display").text(JSON.stringify(data));
       }
 
       function on_scan() {

@@ -19,7 +19,7 @@ public class Main {
 		else
 			configuration = new PropertyFileDatabaseConfiguration("database.properties");
 
-		ReusableJettyApp app = new ReusableJettyApp(new SupermarketServlet(configuration));
+		ReusableJettyApp app = new ReusableJettyApp(new CheckoutServlet(configuration));
 		app.start(valueOf(port), "src/main/webapp");
 	}
 }
