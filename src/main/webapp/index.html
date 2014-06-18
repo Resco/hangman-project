@@ -2,17 +2,37 @@
   <head>
     <meta charset="utf-8" />
     <title>Supermarket Checkout</title>
+    <style type="text/css" media="screen">
+      body {
+        font-family: sans-serif;
+        font-size: small;
+      }
+    </style>
   </head>
   <body>
-    <h1>This is the Supermarket Checkout</h1>
+    <h1>Supermarket Checkout</h1>
 
-    <p id='display'>&nbsp;</p>
-    <form id='scan'>
-      <input type='submit' value='scan'/>
-      <input type="text" name="code" value="" id="code"/>
-    </form>
+    <div id="login">
+      <h3>Please log in</h3>
+      <p id='login-message'>&nbsp;</p>
+      <form id='login'>
+        <label for="casher_id">Casher ID</label><br/>
+        <input type="text" name="casher_id" value="" id="casher_id"/><br/>
+        <label for="password">Password</label><br/>
+        <input type="password" name="password" value="" id="password"/><br/>
+        <input type="submit" value="Log in" />
+      </form>
+    </div>
 
-    <script src='/scripts/lib/jquery-1.10.2.min.js'></script>
+    <div id="checkout" style='display: none'>
+      <p id='display'>&nbsp;</p>
+      <form id='scan'>
+        <input type='submit' value='scan'/>
+        <input type="text" name="code" value="" id="code"/>
+      </form>
+    </div>
+
+    <script src='/js/lib/jquery-1.10.2.min.js'></script>
     <script>
       function on_scan_success(data) {
         $("#display").text("Price: " + data.price);
@@ -20,6 +40,16 @@
 
       function on_scan_error(data) {
         $("#display").text(JSON.stringify(data));
+      }
+
+      function on_login_success(data) {
+        $("#display").text("Login ok");
+        $("#login").hide(100);
+        $("#checkout").show(100);
+      }
+
+      function on_login_error(data) {
+        $("#login-message").text("Bad login");
       }
 
       function on_scan() {
@@ -35,8 +65,23 @@
         return false;
       }
 
+      function on_login() {
+        $.ajax({
+          url: '/authenticate',
+          method: 'post',
+          success: on_login_success,
+          error: on_login_error,
+          data: {
+            id: $("#casher_id").val(),
+            password: $("#password").val(),
+          },
+        });
+        return false;
+      }
+
       $(document).ready(function() {
         $("#scan").submit(on_scan);
+        $("#login").submit(on_login);
       });
     </script>
   </body>
