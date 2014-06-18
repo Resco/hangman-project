@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Demo Counters</title>
+    <style type="text/css" media="screen">
+      body, table{
+        font-family: sans-serif;
+        font-size: small;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Demo Counters</h1>
+
+    <div id="target">
+    </div>
+
+    <div id="target2">
+    </div>
+
+    <script id="demo_template" type="x-tmpl-mustache">
+    <p>{{ value }}</p>
+    <button class='inc'>INC</button>
+    <button class='dec'>DEC</button>
+    </script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src='js/lib/mustache.js'></script>
+    <script src='js/counter.js'></script>
+    <script src='js/counter_view.js'></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+      $(document).ready(function () {
+        var view = new CounterView("#demo_template", "#target");
+        var view2 = new CounterView("#demo_template", "#target2");
+        var c = new Counter();
+        view.notify(c);
+        c.add_observer(view);
+
+        c = new Counter();
+        view2.notify(c);
+        c.add_observer(view2);
+      });
+    </script>
+  </body>
+</html>
+
