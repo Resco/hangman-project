@@ -12,6 +12,18 @@
   <body>
     <h1>Demo Counters</h1>
 
+    <p>We demonstrate how to structure JS code well.</p>
+
+    <p>The "model" here is a simple counter.</p>
+
+    <p>The "view" is a small panel with buttons to increment or decrement the counter.</p>
+
+    <p>There is no real "controller" here.  The views observe the model, and when the model changes, the model notifies them.  They then redraw themselves to reflect the current value of the model.  They also set up the connection between the buttons and the model. </p>
+
+    <p>Most of the JS code is in separate files.</p>
+
+    <p>There are two views here, both connected to the same model.  The connection is setup in the "main", which is right here in this file.</p>
+
     <div id="target">
     </div>
 
@@ -32,13 +44,12 @@
     <script type="text/javascript" charset="utf-8">
 
       $(document).ready(function () {
+        var c = new Counter();
         var view = new CounterView("#demo_template", "#target");
         var view2 = new CounterView("#demo_template", "#target2");
-        var c = new Counter();
         view.notify(c);
         c.add_observer(view);
 
-        c = new Counter();
         view2.notify(c);
         c.add_observer(view2);
       });

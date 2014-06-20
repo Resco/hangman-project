@@ -3,7 +3,7 @@
     <meta charset="utf-8" />
     <title>Supermarket Checkout</title>
     <style type="text/css" media="screen">
-      body {
+      body, table {
         font-family: sans-serif;
         font-size: small;
       }
@@ -24,20 +24,54 @@
 
         <input type="submit" value="Log in" />
       </form>
+      <p>Hint: the id and password are in src/main/sql/seed.sql</p>
     </div>
 
     <div id="checkout" style='display: none'>
-      <p id='display'>&nbsp;</p>
+      <div id='display'>&nbsp;</div>
       <form id='scan'>
         <input type='submit' value='scan'/>
-        <input type="text" name="code" value="" id="code"/>
+        <input type="text" name="code" value="" id="code" autofocus='autofocus'/>
       </form>
     </div>
 
+    <div id="bill">
+
+    </div>
+
+    <script id='display-template' type="application/x-tmpl-mustache">
+      <p>Price: {{ price }}</p>
+      <p>Total: {{ total }}</p>
+    </script>
+
+    <script id='bill-template' type="application/x-tmpl-mustache">
+      <ul>
+      {{ #items }}
+        <li>{{ code }}: {{ price }}</li>
+      {{ /items }}
+      </ul>
+    </script>
+
     <script src='/js/lib/jquery-1.10.2.min.js'></script>
+    <script src='/js/lib/mustache.js'></script>
+    <script src='/js/checkout.js'></script>
     <script>
+      var checkout = new Checkout();
+
       function on_scan_success(data) {
-        $("#display").text("Price: " + data.price);
+        // eliminare la concatenazione!!!
+        // usare mustache per renderizzare il template "#display-template"
+        checkout.on_price_received($("#code").val(), data.price);
+        var template = $("#display-template").html();
+        var rendered = Mustache.render(template, {
+          price: data.price,
+          total: checkout.total,
+        });
+        $("#display").html(rendered);
+
+        var template1 = $("#bill-template").html();
+        var rendered1 = Mustache.render(template1, { items: checkout.bill});
+        $("#bill").html(rendered1);
       }
 
       function on_scan_error(data) {
@@ -46,8 +80,8 @@
 
       function on_login_success(data) {
         $("#display").text("Login ok");
-        $("#login").hide(100);
-        $("#checkout").show(100);
+        $("#login").fadeOut(100);
+        $("#checkout").fadeIn(100);
       }
 
       function on_login_error(data) {
@@ -84,6 +118,11 @@
       $(document).ready(function() {
         $("#scan").submit(on_scan);
         $("#login").submit(on_login);
+
+        // login automatica
+        $("#casher_id").val("123");
+        $("#password").val("secret");
+        on_login();
       });
     </script>
   </body>
