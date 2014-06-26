@@ -36,7 +36,6 @@
     </div>
 
     <div id="bill">
-
     </div>
 
     <script id='display-template' type="application/x-tmpl-mustache">
@@ -55,28 +54,9 @@
     <script src='/js/lib/jquery-1.10.2.min.js'></script>
     <script src='/js/lib/mustache.js'></script>
     <script src='/js/checkout.js'></script>
+    <script src='/js/checkout_display_view.js'></script>
     <script>
       var checkout = new Checkout();
-
-      function on_scan_success(data) {
-        // eliminare la concatenazione!!!
-        // usare mustache per renderizzare il template "#display-template"
-        checkout.on_price_received($("#code").val(), data.price);
-        var template = $("#display-template").html();
-        var rendered = Mustache.render(template, {
-          price: data.price,
-          total: checkout.total,
-        });
-        $("#display").html(rendered);
-
-        var template1 = $("#bill-template").html();
-        var rendered1 = Mustache.render(template1, { items: checkout.bill});
-        $("#bill").html(rendered1);
-      }
-
-      function on_scan_error(data) {
-        $("#display").text(JSON.stringify(data));
-      }
 
       function on_login_success(data) {
         $("#display").text("Login ok");
@@ -86,6 +66,14 @@
 
       function on_login_error(data) {
         $("#login-message").text("Bad login");
+      }
+
+      function on_scan_success(data) {
+        checkout.on_price_received($("#code").val(), data.price);
+      }
+
+      function on_scan_error(data) {
+        $("#display").text(JSON.stringify(data));
       }
 
       function on_scan() {
@@ -123,6 +111,12 @@
         $("#casher_id").val("123");
         $("#password").val("secret");
         on_login();
+
+        // setup my objects
+        var display_view = new CheckoutDisplayView("#display-template", "#display");
+        var bill_view = new CheckoutBillView("#bill-template", "#bill");
+        checkout.add_observer(display_view);
+        checkout.add_observer(bill_view);
       });
     </script>
   </body>
