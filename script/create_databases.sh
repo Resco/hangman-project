@@ -5,8 +5,8 @@
 
 # define key information
 src=src/main/sql
-dbname=aw_supermarket_checkout_development
-dbuser=aw_supermarket_checkout
+dbname=mastermind_db
+dbuser=mastermind
 dbpassword="secret"
 
 # no customization needed beyond this line
