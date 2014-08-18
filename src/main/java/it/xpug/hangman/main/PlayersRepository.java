@@ -1,5 +1,8 @@
 package it.xpug.hangman.main;
 
+import java.security.MessageDigest;
+import java.util.HashMap;
+
 import it.xpug.generic.db.Database;
 import it.xpug.generic.db.ListOfRows;
 
@@ -11,18 +14,45 @@ public class PlayersRepository {
 	}
 	
 	public void add(Player player) {
-		String sql = "insert into players (nickname, encrypted_password) values (?, ?)";
-		database.execute(sql, cashier.cashierId(), cashier.encryptedPassword());
+		String sql = "insert into players (nickname, mail, salt, cript) values (?, ?, ?, ?)";
+		database.execute(sql, player.playerNick(), player.playerMail(),
+				player.playerSalt(), player.encryptedPassword());
 	}
 
-	public boolean cashierExists(Cashier cashier) {
-		String sql = "select * from cashiers where id = ? and encrypted_password = ?";
-		ListOfRows rows = database.select(sql, cashier.cashierId(), cashier.encryptedPassword());
+	public boolean nicknameExists(String nick) {
+		String sql = "select * from players where nickname = ?";
+		ListOfRows rows = database.select(sql, nick);
 		return rows.size() != 0;
+	}
+	
+	public boolean playerExists (String nick, String password){
+		if(this.nicknameExists(nick)){
+			String sql = "select * from players where nickname = ?";
+			ListOfRows rows = database.select(sql, nick);
+			HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
+			String salt = (String) row.get("salt");
+			String calculated = encryptedPassword(password, salt);
+			String encr = (String) row.get("cript");
+			return (calculated.equals(encr));
+		}
+		return false;
+			
 	}
 
 	public long count() {
 		String sql = "select count(*) as cashiers_count from cashiers";
 		return (Long) database.selectOneValue(sql, "cashiers_count");
+	}
+	
+	private String encryptedPassword(String password, String salt) {
+		try {
+			String seed = "" + password + salt;
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			md.update(seed.getBytes("UTF-8"));
+			byte[] digest = md.digest();
+			return Player.toHexString(digest);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

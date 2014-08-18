@@ -3,26 +3,40 @@ package it.xpug.hangman.main;
 import java.security.MessageDigest;
 
 public class Player {
-	private String playerNick;
+	private String nick;
+	private String mail;
+	private String salt;
 	private String password;
 
-	public Player(String nickname, String password) {
-		this.playerNick = nickname;
+	public Player(String nickname, String mail, String salt , String password) {
+		this.nick = nickname;
 		this.password = password;
+		this.mail = mail;
+		this.salt = salt;
+		
 	}
 
 	public String playerNick() {
-		return playerNick;
+		return nick;
 	}
 
-	public String password() {
+	public String playerPassword() {
 		return password;
+	}
+	
+	public String playerSalt() {
+		return salt;
+	}
+	
+	public String playerMail() {
+		return mail;
 	}
 
 	public String encryptedPassword() {
 		try {
+			String seed = "" + password + salt;
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			md.update(password.getBytes("UTF-8"));
+			md.update(seed.getBytes("UTF-8"));
 			byte[] digest = md.digest();
 			return toHexString(digest);
 		} catch (Exception e) {

@@ -20,6 +20,6 @@ public class HangmanServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Database database = new Database(configuration);
-		
+		PlayersRepository p_repository = new PlayersRepository(database);
 	}
 }
