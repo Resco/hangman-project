@@ -1,17 +1,17 @@
-package it.xpug.supermarket.main;
+package it.xpug.hangman.main;
 
-import it.xpug.generic.db.*;
+import it.xpug.generic.db.Database;
+import it.xpug.generic.db.ListOfRows;
 
-public class CashierRepository {
-
+public class PlayersRepository {
 	private Database database;
 
-	public CashierRepository(Database database) {
+	public PlayersRepository(Database database) {
 		this.database = database;
 	}
-
-	public void add(Cashier cashier) {
-		String sql = "insert into cashiers (id, encrypted_password) values (?, ?)";
+	
+	public void add(Player player) {
+		String sql = "insert into players (nickname, encrypted_password) values (?, ?)";
 		database.execute(sql, cashier.cashierId(), cashier.encryptedPassword());
 	}
 
@@ -25,5 +25,4 @@ public class CashierRepository {
 		String sql = "select count(*) as cashiers_count from cashiers";
 		return (Long) database.selectOneValue(sql, "cashiers_count");
 	}
-
 }

@@ -1,6 +1,6 @@
-package it.xpug.supermarket.main;
+package it.xpug.hangman.main;
 
-import java.sql.*;
+import java.sql.Connection;
 
 public interface DatabaseConfiguration {
 	Connection getConnection();

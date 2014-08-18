@@ -1,7 +1,8 @@
-package it.xpug.supermarket.main;
+package it.xpug.hangman.main;
 
-import java.net.*;
-import java.sql.*;
+import java.net.URI;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class HerokuDatabaseConfiguration implements DatabaseConfiguration {
 

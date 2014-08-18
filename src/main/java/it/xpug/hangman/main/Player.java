@@ -1,19 +1,18 @@
-package it.xpug.supermarket.main;
+package it.xpug.hangman.main;
 
-import java.security.*;
+import java.security.MessageDigest;
 
-public class Cashier {
-
-	private int cashierId;
+public class Player {
+	private String playerNick;
 	private String password;
 
-	public Cashier(int cashierId, String password) {
-		this.cashierId = cashierId;
+	public Player(String nickname, String password) {
+		this.playerNick = nickname;
 		this.password = password;
 	}
 
-	public int cashierId() {
-		return cashierId;
+	public String playerNick() {
+		return playerNick;
 	}
 
 	public String password() {
@@ -41,5 +40,4 @@ public class Cashier {
 		}
 		return result;
 	}
-
 }

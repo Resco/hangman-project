@@ -1,5 +1,4 @@
-package it.xpug.supermarket.main;
-
+package it.xpug.hangman.main;
 
 import static java.lang.Integer.*;
 import it.xpug.generic.db.*;
@@ -19,7 +18,7 @@ public class Main {
 		else
 			configuration = new PropertyFileDatabaseConfiguration("database.properties");
 
-		ReusableJettyApp app = new ReusableJettyApp(new CheckoutServlet(configuration));
+		ReusableJettyApp app = new ReusableJettyApp(new HangmanServlet(configuration));
 		app.start(valueOf(port), "src/main/webapp");
 	}
 }
