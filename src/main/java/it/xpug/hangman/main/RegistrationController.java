@@ -21,21 +21,22 @@ public class RegistrationController extends Controller {
 		String re_pw = request.getParameter("re_password");
 		String mail = request.getParameter("mail");
 		if(pw.length()<8){
-			response.setStatus(401);
 			writeBody(toJson("description", "We need an 8 words password"));
 		}
 		else if (!pw.equals(re_pw)){
-			response.setStatus(401);
 			writeBody(toJson("description", "Digited password aren't equal"));
 		}
 		else if (mail.indexOf('@')==-1){
-			response.setStatus(401);
 			writeBody(toJson("description", "Your mail doesn't have the '@'"));
 		}
 		else if (p_repository.nicknameExists(nick)){
-			response.setStatus(401);
-			writeBody(toJson("description", "Please select another"));
+			writeBody(toJson("description", "Please select another nickname"));
 		}
-			
+		else{
+			Player player = new Player(nick, mail, pw);
+			p_repository.add(player);
+			writeBody(toJson("description", "Nice job! You just registered to Hangman"));
+		}
+		
 	}
 }

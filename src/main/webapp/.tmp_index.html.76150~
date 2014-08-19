@@ -57,7 +57,6 @@
 		<script>
 			$(document).ready(function() {
         		$("#register").submit(on_register);
-				$("#login").submit(on_login);
       		});
 			
 			function on_register() {
@@ -77,36 +76,11 @@
       		}
 			
 			function on_register_success(data) {
-				$("#display").text(data.description);
-				$("#register")[0].reset();
+        		$("#display").text(data.description);
       		}
 
       		function on_register_error(data) {
-				$("#display").text(JSON.stringify(data.responseJSON));
-      		}
-			
-			function on_login() {
-        		$.ajax({
-          			url: '/authenticate',
-          			method: 'post',
-          			success: on_login_success,
-          			error: on_login_error,
-          			data: {
-            			nickname: $("#nick_login").val(),
-            			password: $("#password_login").val(),
-          			},
-        		});
-        	return false;
-      		}
-			
-			function on_login_success(data) {
-				$("#login")[0].reset();
-				$("#log").fadeOut();
-				$("#reg").fadeOut();
-      		}
-
-      		function on_login_error(data) {
-				$("#display").text(JSON.stringify(data.responseJSON));
+        		$("#display").text(data.description);
       		}
 	  
 	  	</script>

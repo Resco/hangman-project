@@ -1,6 +1,7 @@
 package it.xpug.hangman.main;
 
 import java.security.MessageDigest;
+import java.util.Random;
 
 public class Player {
 	private String nick;
@@ -8,12 +9,12 @@ public class Player {
 	private String salt;
 	private String password;
 
-	public Player(String nickname, String mail, String salt , String password) {
+	public Player(String nickname, String mail, String password) {
+		Random random = new Random();
 		this.nick = nickname;
 		this.password = password;
 		this.mail = mail;
-		this.salt = salt;
-		
+		this.salt = "" + random.nextInt(99999999);
 	}
 
 	public String playerNick() {

@@ -12,7 +12,7 @@ public class PlayersRepository {
 	public PlayersRepository(Database database) {
 		this.database = database;
 	}
-	
+
 	public void add(Player player) {
 		String sql = "insert into players (nickname, mail, salt, cript) values (?, ?, ?, ?)";
 		database.execute(sql, player.playerNick(), player.playerMail(),
@@ -24,26 +24,22 @@ public class PlayersRepository {
 		ListOfRows rows = database.select(sql, nick);
 		return rows.size() != 0;
 	}
-	
-	public boolean playerExists (String nick, String password){
-		if(this.nicknameExists(nick)){
-			String sql = "select * from players where nickname = ?";
-			ListOfRows rows = database.select(sql, nick);
-			HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
-			String salt = (String) row.get("salt");
-			String calculated = encryptedPassword(password, salt);
-			String encr = (String) row.get("cript");
-			return (calculated.equals(encr));
-		}
-		return false;
-			
+
+	public boolean correctPassword (String nick, String password){
+		String sql = "select * from players where nickname = ?";
+		ListOfRows rows = database.select(sql, nick);
+		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
+		String salt = (String) row.get("salt");
+		String calculated = encryptedPassword(password, salt);
+		String encr = (String) row.get("cript");
+		return (calculated.equals(encr));
 	}
 
 	public long count() {
 		String sql = "select count(*) as cashiers_count from cashiers";
 		return (Long) database.selectOneValue(sql, "cashiers_count");
 	}
-	
+
 	private String encryptedPassword(String password, String salt) {
 		try {
 			String seed = "" + password + salt;
