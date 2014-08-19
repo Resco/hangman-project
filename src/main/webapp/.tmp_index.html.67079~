@@ -58,24 +58,7 @@
 			$(document).ready(function() {
         		$("#register").submit(on_register);
 				$("#login").submit(on_login);
-				check_log();
       		});
-			
-			function check_log() {
-        		$.ajax({
-          			url: '/logged',
-          			method: 'get',
-          			success: on_check_log_success,
-        		});
-        	return false;
-      		}
-
-			function on_check_log_success(data) {
-				$("#display").text(data.description);
-				$("#log").fadeOut();
-				$("#reg").fadeOut();
-      		}
-			
 			
 			function on_register() {
         		$.ajax({
@@ -120,7 +103,6 @@
 				$("#login")[0].reset();
 				$("#log").fadeOut();
 				$("#reg").fadeOut();
-				$("#display").text(data.description);
       		}
 
       		function on_login_error(data) {
