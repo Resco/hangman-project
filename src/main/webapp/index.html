@@ -8,7 +8,7 @@
 	
 	<body>
 		<header>
-			<h1>This is Mastermid</h1>
+			<h1>This is my Mastermind</h1>
 			<nav>Please login or register</nav>
 		</header>
 		<div id='main'>
@@ -45,7 +45,10 @@
 						
 				    <input type="submit" value="Register" />    
 	      		</form>
-			</section>		
+			</section>	
+			
+			
+				
 		</div>
 		
 		<footer>
@@ -55,6 +58,7 @@
 		
 		<script src='/js/lib/jquery-1.10.2.min.js'></script>
 		<script>
+			
 			$(document).ready(function() {
         		$("#register").submit(on_register);
 				$("#login").submit(on_login);
@@ -65,15 +69,8 @@
         		$.ajax({
           			url: '/logged',
           			method: 'get',
-          			success: on_check_log_success,
-        		});
-        	return false;
-      		}
-
-			function on_check_log_success(data) {
-				$("#display").text(data.description);
-				$("#log").fadeOut();
-				$("#reg").fadeOut();
+          			success: on_login_success,
+        		})
       		}
 			
 			

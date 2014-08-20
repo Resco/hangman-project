@@ -29,18 +29,21 @@ public class AuthenticationController extends Controller {
 		else{
 			writeBody(toJson("description", "Welcome " + nick));
 			PlayerSession session = s_repository.createSession(nick);
-			response.addCookie(new Cookie("session_id", session.id()));
+			response.addCookie(new Cookie("session_id", session.id_session()));
 		}
 	}
 	
-	public void logged_service() throws IOException {
-		for (Cookie cookie : request.getCookies()) {
+	public void cookie_service() throws IOException {
+		try{for (Cookie cookie : request.getCookies()) {
 			PlayerSession session = s_repository.findSession(cookie.getValue());
 			if (session != null) {
 				String nick = session.id_player();
 				writeBody(toJson("description", "Welcome " + nick));
-				return;
 			}
+			
+		}
+		}
+		catch(NullPointerException exc){
 		}
 		
 	}

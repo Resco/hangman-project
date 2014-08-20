@@ -8,14 +8,12 @@
 	
 	<body>
 		<header>
-			<h1>This is Mastermid</h1>
+			<h1>This is Mastermind</h1>
 			<nav>Please login or register</nav>
 		</header>
 		<div id='main'>
 			
 			<div id='display'>&nbsp;</div>
-			<div id='display2'>&nbsp;</div>
-
 			
 			<section id='log'>
 				<h3>Login</h3>
@@ -47,7 +45,20 @@
 						
 				    <input type="submit" value="Register" />    
 	      		</form>
-			</section>		
+			</section>	
+			
+			<section id='current'>
+				
+			</section>
+			
+			<section id='history'>
+				
+			</section>
+			
+			<section id='scores'>
+				
+			</section>
+				
 		</div>
 		
 		<footer>
@@ -59,7 +70,18 @@
 		<script>
 			$(document).ready(function() {
         		$("#register").submit(on_register);
+				$("#login").submit(on_login);
+				check_log();
       		});
+			
+			function check_log() {
+        		$.ajax({
+          			url: '/logged',
+          			method: 'get',
+          			success: on_login_success,
+        		})
+      		}
+			
 			
 			function on_register() {
         		$.ajax({
@@ -79,10 +101,38 @@
 			
 			function on_register_success(data) {
 				$("#display").text(data.description);
+				$("#register")[0].reset();
       		}
 
       		function on_register_error(data) {
-				$("#display").text();
+				$("#display").text(JSON.stringify(data.responseJSON));
+      		}
+			
+			function on_login() {
+        		$.ajax({
+          			url: '/authenticate',
+          			method: 'post',
+          			success: on_login_success,
+          			error: on_login_error,
+          			data: {
+            			nickname: $("#nick_login").val(),
+            			password: $("#password_login").val(),
+          			},
+        		});
+        	return false;
+      		}
+			
+			function on_login_success(data) {
+				$("#login")[0].reset();
+				$("#log").fadeOut();
+				$("#reg").fadeOut();
+				$("#display").text(data.description);
+				var navigation = <button class="link">Clicky</button>;
+				$("nav").html(navigation);
+      		}
+
+      		function on_login_error(data) {
+				$("#display").text(JSON.stringify(data.responseJSON));
       		}
 	  
 	  	</script>

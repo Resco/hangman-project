@@ -21,7 +21,7 @@ public class HangmanServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Database database = new Database(configuration);
 		PlayersRepository p_repository = new PlayersRepository(database);
-		SessionsRepository s_repository = new SessionsRepository(new Random());
+		SessionsRepository s_repository = new SessionsRepository(database, new Random());
 		
 		RegistrationController r_controller = new RegistrationController(p_repository, request, response);
 		AuthenticationController a_controller = new AuthenticationController(p_repository, s_repository, request, response);
@@ -36,7 +36,7 @@ public class HangmanServlet extends HttpServlet {
 		}
 		
 		if (request.getRequestURI().equals("/logged")) {
-			a_controller.logged_service();
+			a_controller.cookie_service();
 			return;
 		}
 	}

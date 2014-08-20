@@ -14,9 +14,10 @@ public class PlayersRepository {
 	}
 
 	public void add(Player player) {
-		String sql = "insert into players (nickname, mail, salt, cript) values (?, ?, ?, ?)";
+		String sql = "insert into players (nickname, mail, salt, cript, n_partite, average)" +
+				" values (?, ?, ?, ?, ?, ?)";
 		database.execute(sql, player.playerNick(), player.playerMail(),
-				player.playerSalt(), player.encryptedPassword());
+				player.playerSalt(), player.encryptedPassword(), 0, 0);
 	}
 
 	public boolean nicknameExists(String nick) {

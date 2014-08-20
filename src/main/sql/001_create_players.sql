@@ -4,6 +4,8 @@ create table players (
   mail varchar(255) not null,
   salt varchar(255) not null,
   cript varchar(255) not null,
+  n_partite integer not null,
+  average integer not null,
   primary key (nickname)
 );
 
