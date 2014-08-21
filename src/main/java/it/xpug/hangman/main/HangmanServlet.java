@@ -45,5 +45,10 @@ public class HangmanServlet extends HttpServlet {
 			g_controller.new_game_service();
 			return;
 		}
+		
+		if (request.getRequestURI().equals("/move")) {
+			g_controller.move_service();
+			return;
+		}
 	}
 }

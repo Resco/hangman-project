@@ -26,6 +26,10 @@ public class GamesRepository {
 		return game;
 	}
 	
+	public String find_game_code(String string){
+		
+	}
+	
 	private String codemaker(){
 		String code = "";
 		for(int i=0; i<4; i++){

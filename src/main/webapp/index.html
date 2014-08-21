@@ -49,7 +49,10 @@
 			
 			<section id='new_g'>
 				<h3>Your game</h3>
-				<div id='info_game'>&nbsp;</div>
+				<div id='info_game'>
+					<p id='general'>&nbsp;</p>
+					<p id='answer'>&nbsp;</p>
+				</div>
 				<form id='move'>	
 					<label for='seq'>Sequence</label><br/>
 				    <input type='text' name="seq" value="" id='seq'/><br/>
@@ -95,11 +98,22 @@
       		}
       		
       		function on_new_game_success (data){
-      			$("#info_game").text("Game number " + data.number + "Try to guess " + data.code);
+      			$("#general").text(data.number);
       		}
       		
       		function on_move (){
-      			
+      			$.ajax({
+          			url: '/move',
+          			method: 'post',
+          			success: on_move_success;
+          			data: {
+            			game_id: $("#general").val(),
+            			sequence: $("#seq").val(),
+          			},
+        		});
+      		}
+      		
+      		function on_move_success (data){
       		}
 			
 			function check_log() {

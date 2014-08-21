@@ -33,4 +33,17 @@ public class GameController extends Controller{
 	}
 	}
 
+	public void move_service() {
+
+		String code = g_repository.find_game_code(request.getParameter("game_id"));
+		compareCodes(code, request.getParameter("sequence"));
+	}
+
+	private void compareCodes(String codeToGuess, String codeSubmitted) {
+		for(int i=0; i<4; i++){
+			
+		}
+		
+	}
+
 }
