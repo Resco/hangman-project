@@ -1,9 +1,9 @@
 create table games (
-  num integer not null,
+  num varchar(255) not null,
   player varchar(255) not null,
   started date,
   finisched date,
-  points integer not null,
+  points varchar(255) not null,
   code varchar(255) not null,
   primary key (num, player)
 );

@@ -28,13 +28,16 @@ public class SessionsRepository {
 	}
 
 	public PlayerSession findSession(String sessionId) {
-		String sql = "select * from sessions where session_id = ?";
+		try{String sql = "select * from sessions where session_id = ?";
 		ListOfRows rows = database.select(sql, sessionId);
 		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
 		String ses_id = (String) row.get("session_id");
 		String play_id = (String) row.get("player_id");
 		PlayerSession returned = new PlayerSession(ses_id, play_id);
-		return returned;
+		return returned;}
+		catch(IndexOutOfBoundsException exc){
+			return null;
+		}
 	}
 	
 	

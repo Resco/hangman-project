@@ -22,9 +22,10 @@ public class HangmanServlet extends HttpServlet {
 		Database database = new Database(configuration);
 		PlayersRepository p_repository = new PlayersRepository(database);
 		SessionsRepository s_repository = new SessionsRepository(database, new Random());
-		
+		GamesRepository g_repository = new GamesRepository(database);
 		RegistrationController r_controller = new RegistrationController(p_repository, request, response);
 		AuthenticationController a_controller = new AuthenticationController(p_repository, s_repository, request, response);
+		GameController g_controller = new GameController(p_repository, s_repository, request, g_repository, response);
 		if (request.getRequestURI().equals("/register")) {
 			r_controller.service();
 			return;
@@ -37,6 +38,11 @@ public class HangmanServlet extends HttpServlet {
 		
 		if (request.getRequestURI().equals("/logged")) {
 			a_controller.cookie_service();
+			return;
+		}
+		
+		if (request.getRequestURI().equals("/newgame")) {
+			g_controller.new_game_service();
 			return;
 		}
 	}

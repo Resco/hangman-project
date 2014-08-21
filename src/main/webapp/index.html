@@ -9,7 +9,7 @@
 	<body>
 		<header>
 			<h1>This is my Masterminds</h1>
-			<nav>Please login or register</nav>
+			<nav id="navigation">Please login or register</nav>
 		</header>
 		<div id='main'>
 			
@@ -47,6 +47,16 @@
 	      		</form>
 			</section>	
 			
+			<section id='new_g'>
+				<h3>Your game</h3>
+				<div id='info_game'>&nbsp;</div>
+				<form id='move'>	
+					<label for='seq'>Sequence</label><br/>
+				    <input type='text' name="seq" value="" id='seq'/><br/>
+						
+				    <input type="submit" value="Send" />    
+	      		</form>
+			</section>
 			
 				
 		</div>
@@ -57,7 +67,7 @@
 		</footer>
 		
 		<script id='navigate-template' type="application/x-tmpl-mustache">
-      		Welcome {{name}}. Your average is {{average}} on {{games}} games.
+      		Welcome {{description}}. Your average is {{average}} on {{games}} games.
     	</script>
 		
 		<script src='/js/lib/jquery-1.10.2.min.js'></script>
@@ -68,8 +78,29 @@
 			$(document).ready(function() {
         		$("#register").submit(on_register);
 				$("#login").submit(on_login);
+				$("#new_g").fadeOut();
+				
 				check_log();
       		});
+      		
+      		function on_new_game() {
+      			$("#new_g").fadeIn();
+      			//creazione della partita
+      			$.ajax({
+          			url: '/newgame',
+          			method: 'get',
+          			success: on_new_game_success,
+        		});
+      			$("#move").submit(on_move);
+      		}
+      		
+      		function on_new_game_success (data){
+      			$("#info_game").text("Game number " + data.number + "Try to guess " + data.code);
+      		}
+      		
+      		function on_move (){
+      			
+      		}
 			
 			function check_log() {
         		$.ajax({
@@ -123,11 +154,16 @@
 				$("#login")[0].reset();
 				$("#log").fadeOut();
 				$("#reg").fadeOut();
+				$("#display").text("");
+				
+				$("#navigation").html( '<button type="button" id="newgame">New Game</button>' );
+      			$("#newgame").click(on_new_game);
       		}
 
       		function on_login_error(data) {
 				$("#display").text(JSON.stringify(data.responseJSON));
       		}
+      		
 	  
 	  	</script>
 	</body>

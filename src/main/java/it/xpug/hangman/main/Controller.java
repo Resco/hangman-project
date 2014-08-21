@@ -28,6 +28,19 @@ public class Controller {
 	protected String toJson(String name, int value) {
 		return format("{ \"%s\": %s }", name, value);
 	}
+	
+	protected String toJson(String[] name, String[] value) {
+		String json="";
+		for (int i=0; i<name.length; ++i){
+			if (i == 0) {
+				json+= format("\"%s\": \"%s\" ", name[i], value[i]);
+			} else {
+				json+= "," + format("\"%s\": \"%s\" ", name[i], value[i]);
+			}
+			
+		}
+		return "{" +json+ "}";
+	}
 
 	protected void writeBody(String body) throws IOException {
 		response.getWriter().write(body);
