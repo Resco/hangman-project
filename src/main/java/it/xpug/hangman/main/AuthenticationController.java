@@ -27,7 +27,9 @@ public class AuthenticationController extends Controller {
 			writeBody(toJson("description", "Try another password"));
 		}
 		else{
-			writeBody(toJson("description", "Welcome " + nick));
+			writeBody(toJson("nickname", nick));
+			writeBody(toJson("average", "" + 0));
+			writeBody(toJson("games", "" + 0));
 			PlayerSession session = s_repository.createSession(nick);
 			response.addCookie(new Cookie("session_id", session.id_session()));
 		}
@@ -38,7 +40,7 @@ public class AuthenticationController extends Controller {
 			PlayerSession session = s_repository.findSession(cookie.getValue());
 			if (session != null) {
 				String nick = session.id_player();
-				writeBody(toJson("description", "Welcome " + nick));
+				writeBody(toJson("nick", nick));
 			}
 			
 		}

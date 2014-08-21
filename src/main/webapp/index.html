@@ -56,7 +56,13 @@
 			<div id='exam'>Appello: Settembre 2014</div>
 		</footer>
 		
+		<script id='navigate-template' type="application/x-tmpl-mustache">
+      		Welcome {{name}}. Your average is {{average}} on {{games}} games.
+    	</script>
+		
 		<script src='/js/lib/jquery-1.10.2.min.js'></script>
+		<script src='/js/lib/mustache.js'></script>
+		
 		<script>
 			
 			$(document).ready(function() {
@@ -117,7 +123,6 @@
 				$("#login")[0].reset();
 				$("#log").fadeOut();
 				$("#reg").fadeOut();
-				$("#display").text(data.description);
       		}
 
       		function on_login_error(data) {
