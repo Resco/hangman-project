@@ -26,23 +26,43 @@ public class GameController extends Controller{
 			if (session != null) {
 				//aggiungi una partita con i dati utili
 				Game game = g_repository.createGame(session.id_player());
-				String[] name = {"number","code"};
+				String[] name = {"game_id","code"};
 				String[] value = {game.id_game(),game.secret_code()};
 				writeBody(toJson(name, value));
 			}
 	}
 	}
 
-	public void move_service() {
-
+	public void move_service() throws IOException {
+		
 		String code = g_repository.find_game_code(request.getParameter("game_id"));
-		compareCodes(code, request.getParameter("sequence"));
+		String answer = compareCodes(code, request.getParameter("sequence"));
+		writeBody(toJson("answer", answer));
 	}
 
-	private void compareCodes(String codeToGuess, String codeSubmitted) {
+	private String compareCodes(String codeToGuess, String codeSubmitted) {
+		String answer = "";
+		Boolean checked[] = {false, false, false, false};
 		for(int i=0; i<4; i++){
-			
+			if(codeSubmitted.charAt(i)==codeToGuess.charAt(i)){
+				checked[i]=true;
+				answer = answer + "+";
+			}
 		}
+		for (int j=0; j<4; j++){
+			if(checked[j]==false){
+				for(int k=0; k<4; k++){
+					if(checked[k]==false){
+						if(codeSubmitted.charAt(j)==codeToGuess.charAt(k)){
+							checked[k]=true;
+							answer = answer + "-";
+							break;
+						}
+					}
+				}
+			}
+		}
+		return answer;
 		
 	}
 

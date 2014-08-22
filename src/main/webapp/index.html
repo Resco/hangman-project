@@ -51,8 +51,10 @@
 				<h3>Your game</h3>
 				<div id='info_game'>
 					<p id='general'>&nbsp;</p>
+					<p id='code'>&nbsp;</p>
 					<p id='answer'>&nbsp;</p>
 				</div>
+				
 				<form id='move'>	
 					<label for='seq'>Sequence</label><br/>
 				    <input type='text' name="seq" value="" id='seq'/><br/>
@@ -81,8 +83,8 @@
 			$(document).ready(function() {
         		$("#register").submit(on_register);
 				$("#login").submit(on_login);
-				$("#new_g").fadeOut();
 				
+				$("#new_g").fadeOut();
 				check_log();
       		});
       		
@@ -98,22 +100,25 @@
       		}
       		
       		function on_new_game_success (data){
-      			$("#general").text(data.number);
+      			$("#code").text(data.code);
+      			$("#general").text(data.game_id);
       		}
       		
       		function on_move (){
       			$.ajax({
           			url: '/move',
           			method: 'post',
-          			success: on_move_success;
+          			success: on_move_success,
           			data: {
-            			game_id: $("#general").val(),
+            			game_id: $("#general").text(),
             			sequence: $("#seq").val(),
           			},
         		});
+        		return false;
       		}
       		
       		function on_move_success (data){
+      			$("#answer").text(data.answer);
       		}
 			
 			function check_log() {
@@ -170,8 +175,10 @@
 				$("#reg").fadeOut();
 				$("#display").text("");
 				
+				
 				$("#navigation").html( '<button type="button" id="newgame">New Game</button>' );
       			$("#newgame").click(on_new_game);
+      			
       		}
 
       		function on_login_error(data) {
