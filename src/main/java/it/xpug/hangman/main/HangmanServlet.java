@@ -23,9 +23,10 @@ public class HangmanServlet extends HttpServlet {
 		PlayersRepository p_repository = new PlayersRepository(database);
 		SessionsRepository s_repository = new SessionsRepository(database, new Random());
 		GamesRepository g_repository = new GamesRepository(database);
+		MovesRepository m_repository = new MovesRepository(database);
 		RegistrationController r_controller = new RegistrationController(p_repository, request, response);
 		AuthenticationController a_controller = new AuthenticationController(p_repository, s_repository, request, response);
-		GameController g_controller = new GameController(p_repository, s_repository, request, g_repository, response);
+		GameController g_controller = new GameController(p_repository, s_repository, m_repository, request, g_repository, response);
 		if (request.getRequestURI().equals("/register")) {
 			r_controller.service();
 			return;

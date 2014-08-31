@@ -11,13 +11,15 @@ public class GameController extends Controller{
 	private PlayersRepository p_repository;
 	private SessionsRepository s_repository;
 	private GamesRepository g_repository;
+	private MovesRepository m_repository;
 	
-	public GameController(PlayersRepository p_rep, SessionsRepository s_rep, HttpServletRequest request,
-			GamesRepository g_rep, HttpServletResponse response) {
+	public GameController(PlayersRepository p_rep, SessionsRepository s_rep, MovesRepository m_rep,
+	HttpServletRequest request, GamesRepository g_rep, HttpServletResponse response) {
 		super(request, response);
 		this.p_repository = p_rep;
 		this.s_repository = s_rep;
 		this.g_repository = g_rep;
+		this.m_repository = m_rep;
 	}
 
 	public void new_game_service() throws IOException {
@@ -37,7 +39,14 @@ public class GameController extends Controller{
 		
 		String code = g_repository.find_game_code(request.getParameter("game_id"));
 		String answer = compareCodes(code, request.getParameter("sequence"));
-		writeBody(toJson("answer", answer));
+		String player = g_repository.find_game_player(request.getParameter("game_id"));
+		String move = request.getParameter("sequence");
+		//inserire la mossa in db e restituire il numero di mossa
+		Move mov = m_repository.createMove(code, player, move, answer, code);
+		//restituisce la richiesta, il risultato e il numero di mossa
+		String[] name = {"num_move","move", "result"};
+		String[] value = {mov.id_move() + "", mov.move(), mov.result()};
+		writeBody(toJson(name, value));
 	}
 
 	private String compareCodes(String codeToGuess, String codeSubmitted) {

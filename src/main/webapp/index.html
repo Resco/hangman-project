@@ -58,11 +58,14 @@
 				<form id='move'>	
 					<label for='seq'>Sequence</label><br/>
 				    <input type='text' name="seq" value="" id='seq'/><br/>
-						
 				    <input type="submit" value="Send" />    
 	      		</form>
 			</section>
 			
+			<script id='game-info-template' type="application/x-tmpl-mustache">
+      			<p>Code of your game: {{ game_id }}</p>
+      			<p># of moves: {{ num_moves }}</p>
+   			</script>
 				
 		</div>
 		
@@ -118,7 +121,7 @@
       		}
       		
       		function on_move_success (data){
-      			$("#answer").text(data.answer);
+      			$("#answer").text(data.num_move + " " + data.move + " " + data.result);
       		}
 			
 			function check_log() {

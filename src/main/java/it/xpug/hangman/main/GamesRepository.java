@@ -37,6 +37,15 @@ public class GamesRepository {
 		
 	}
 	
+	public String find_game_player(String game_id){
+		String sql = "select * from games where game_id = ?";
+		ListOfRows rows = database.select(sql, game_id);
+		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
+		String player_id = (String) row.get("player");
+		return player_id;
+		
+	}
+	
 	private String codemaker(){
 		String code = "";
 		for(int i=0; i<4; i++){
