@@ -1,31 +1,31 @@
 package it.xpug.hangman.main;
 
 public class Game {
-	private String id_game;
-	private String id_player;
-	private String trial_number;
-	private String secret_code;
+	private String game_id;
+	private String player_id;
+	private int score;
+	private String code;
 	
-	public Game (String id_game, String id_player, String trial_number, String secret_code){
-		this.id_game=id_game;
-		this.id_player=id_player;
-		this.trial_number=trial_number;
-		this.secret_code=secret_code;
+	public Game (String id_game, String id_player, int score, String secret_code){
+		this.game_id=id_game;
+		this.player_id=id_player;
+		this.score=score;
+		this.code=secret_code;
 	}
 	
-	public String id_game(){
-		return this.id_game;
+	public String game_id(){
+		return this.game_id;
 	}
 	
-	public String id_player(){
-		return this.id_player;
+	public String player_id(){
+		return this.player_id;
 	}
 	
-	public String trial_number(){
-		return this.trial_number;
+	public int score(){
+		return this.score;
 	}
 	
-	public String secret_code(){
-		return this.secret_code;
+	public String code(){
+		return this.code;
 	}
 }

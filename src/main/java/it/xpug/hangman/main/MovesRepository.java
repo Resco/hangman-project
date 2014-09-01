@@ -15,15 +15,15 @@ public class MovesRepository {
 		this.database = database;
 	}
 	
-	public Move createMove(String game_id, String player_id, String move, String answer, String code) {
-		String sql2 = "select * from moves where num_game = ?";
+	public Move createMove(String game_id, String player_id, String move, String result) {
+		String sql2 = "select * from moves where game_id = ?";
 		ListOfRows rows = database.select(sql2, game_id);
 		int size = rows.size() + 1;
-		String sql = "insert into moves (num_game, player, num_move, move, code)" +
+		String sql = "insert into moves (game_id, player_id, move_id, move, result)" +
 				" values (?, ?, ?, ?, ?)";
 		database.execute(sql, game_id, player_id,
-				size , move, code);
-		Move mov = new Move(game_id, player_id, size, move, answer);
+				size + "" , move, result);
+		Move mov = new Move(game_id, player_id, size, move, result);
 		return mov;
 	}
 }

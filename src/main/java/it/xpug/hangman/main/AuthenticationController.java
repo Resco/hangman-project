@@ -31,7 +31,7 @@ public class AuthenticationController extends Controller {
 			String[] value = {nick,"0"};
 			writeBody(toJson(name, value));
 			PlayerSession session = s_repository.createSession(nick);
-			response.addCookie(new Cookie("session_id", session.id_session()));
+			response.addCookie(new Cookie("session_id", session.session_id()));
 		}
 	}
 	
@@ -39,7 +39,7 @@ public class AuthenticationController extends Controller {
 		try{for (Cookie cookie : request.getCookies()) {
 			PlayerSession session = s_repository.findSession(cookie.getValue());
 			if (session != null) {
-				String nick = session.id_player();
+				String nick = session.player_id();
 				String[] name = {"description","average"};
 				String[] value = {nick,"0"};
 				writeBody(toJson(name, value));

@@ -27,9 +27,9 @@ public class GameController extends Controller{
 			PlayerSession session = s_repository.findSession(cookie.getValue());
 			if (session != null) {
 				//aggiungi una partita con i dati utili
-				Game game = g_repository.createGame(session.id_player());
+				Game game = g_repository.createGame(session.player_id());
 				String[] name = {"game_id","code"};
-				String[] value = {game.id_game(),game.secret_code()};
+				String[] value = {game.game_id(),game.code()};
 				writeBody(toJson(name, value));
 			}
 	}
@@ -41,11 +41,23 @@ public class GameController extends Controller{
 		String answer = compareCodes(code, request.getParameter("sequence"));
 		String player = g_repository.find_game_player(request.getParameter("game_id"));
 		String move = request.getParameter("sequence");
-		//inserire la mossa in db e restituire il numero di mossa
-		Move mov = m_repository.createMove(code, player, move, answer, code);
-		//restituisce la richiesta, il risultato e il numero di mossa
-		String[] name = {"num_move","move", "result"};
-		String[] value = {mov.id_move() + "", mov.move(), mov.result()};
+		Move mov = m_repository.createMove(request.getParameter("game_id"), player, move, answer);
+		g_repository.set_score(request.getParameter("game_id"));
+		if(answer.equals("++++")){
+			//prendo il player_id
+			String player_id = g_repository.set_finished(request.getParameter("game_id"));
+			//prendo lo score attuale
+			int game_score = g_repository.find_game_score(request.getParameter("game_id"));
+			//calcolo la nuova media:
+			//prendendo il totale
+			int total = g_repository.total_score(player_id);
+			//aggiungendo lo score dell'ultima
+			//total = total + game_score;
+			//aggiorno la media
+			p_repository.add_finished_game(player_id, total);
+		}
+		String[] name = {"move_id","move", "result"};
+		String[] value = {mov.move_id() + "", mov.move(), mov.result()};
 		writeBody(toJson(name, value));
 	}
 

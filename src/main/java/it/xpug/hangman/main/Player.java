@@ -4,32 +4,32 @@ import java.security.MessageDigest;
 import java.util.Random;
 
 public class Player {
-	private String nick;
+	private String player_id;
 	private String mail;
 	private String salt;
 	private String password;
 
 	public Player(String nickname, String mail, String password) {
 		Random random = new Random();
-		this.nick = nickname;
+		this.player_id = nickname;
 		this.password = password;
 		this.mail = mail;
 		this.salt = "" + random.nextInt(99999999);
 	}
 
-	public String playerNick() {
-		return nick;
+	public String player_id() {
+		return player_id;
 	}
 
-	public String playerPassword() {
+	public String password() {
 		return password;
 	}
 	
-	public String playerSalt() {
+	public String salt() {
 		return salt;
 	}
 	
-	public String playerMail() {
+	public String mail() {
 		return mail;
 	}
 

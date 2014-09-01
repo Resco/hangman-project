@@ -14,20 +14,20 @@ public class PlayersRepository {
 	}
 
 	public void add(Player player) {
-		String sql = "insert into players (nickname, mail, salt, cript, n_partite, average)" +
+		String sql = "insert into players (player_id, mail, salt, cript, num_games, average)" +
 				" values (?, ?, ?, ?, ?, ?)";
-		database.execute(sql, player.playerNick(), player.playerMail(),
-				player.playerSalt(), player.encryptedPassword(), 0, 0);
+		database.execute(sql, player.player_id(), player.mail(),
+				player.salt(), player.encryptedPassword(), 0, 0);
 	}
 
 	public boolean nicknameExists(String nick) {
-		String sql = "select * from players where nickname = ?";
+		String sql = "select * from players where player_id = ?";
 		ListOfRows rows = database.select(sql, nick);
 		return rows.size() != 0;
 	}
 
 	public boolean correctPassword (String nick, String password){
-		String sql = "select * from players where nickname = ?";
+		String sql = "select * from players where player_id = ?";
 		ListOfRows rows = database.select(sql, nick);
 		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
 		String salt = (String) row.get("salt");
@@ -36,10 +36,6 @@ public class PlayersRepository {
 		return (calculated.equals(encr));
 	}
 
-	public long count() {
-		String sql = "select count(*) as cashiers_count from cashiers";
-		return (Long) database.selectOneValue(sql, "cashiers_count");
-	}
 
 	private String encryptedPassword(String password, String salt) {
 		try {
@@ -51,5 +47,23 @@ public class PlayersRepository {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public void add_finished_game(String player_id, int total_score) {
+		//aumenta il num_games e ricalcola la media
+		//prendo il numero di partite finite
+		String sql = "select * from players where player_id = ?";
+		ListOfRows rows = database.select(sql, player_id);
+		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
+		int num_games = (Integer) row.get("num_games");
+		num_games = num_games +1;
+		String sql2 = "update players set num_games = ? where player_id = ?";
+		database.execute(sql2, num_games, player_id);
+		System.out.println("numb games : " + num_games + " total score : " + total_score);
+		float new_average = ((float)total_score) / ((float)num_games);
+		System.out.println(new_average + "");
+		String sql3 = "update players set average = ? where player_id = ?";
+		database.execute(sql3, new_average, player_id);
+		
 	}
 }

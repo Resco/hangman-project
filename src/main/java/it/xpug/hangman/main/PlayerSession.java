@@ -2,19 +2,19 @@ package it.xpug.hangman.main;
 
 public class PlayerSession {
 	
-	private String id_session;
-	private String id_player;
+	private String session_id;
+	private String player_id;
 
 	public PlayerSession(String id_session, String id_player) {
-		this.id_session = id_session;
-		this.id_player = id_player;
+		this.session_id = id_session;
+		this.player_id = id_player;
 	}
 
-	public String id_session() {
-		return id_session;
+	public String session_id() {
+		return session_id;
 	}
 	
-	public String id_player(){
-		return id_player;
+	public String player_id(){
+		return player_id;
 	}
 }

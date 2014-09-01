@@ -57,9 +57,10 @@
 				
 				<form id='move'>	
 					<label for='seq'>Sequence</label><br/>
-				    <input type='text' name="seq" value="" id='seq'/><br/>
+				    <input type='text' name="seq" value="" id='seq' maxlength="4"/><br/>
 				    <input type="submit" value="Send" />    
 	      		</form>
+	      		
 			</section>
 			
 			<script id='game-info-template' type="application/x-tmpl-mustache">
@@ -86,6 +87,7 @@
 			$(document).ready(function() {
         		$("#register").submit(on_register);
 				$("#login").submit(on_login);
+				$("#move").submit(on_move);
 				
 				$("#new_g").fadeOut();
 				check_log();
@@ -93,13 +95,13 @@
       		
       		function on_new_game() {
       			$("#new_g").fadeIn();
+      			$("#move").fadeIn();
       			//creazione della partita
       			$.ajax({
           			url: '/newgame',
           			method: 'get',
           			success: on_new_game_success,
-        		});
-      			$("#move").submit(on_move);
+        		});	
       		}
       		
       		function on_new_game_success (data){
@@ -121,7 +123,12 @@
       		}
       		
       		function on_move_success (data){
-      			$("#answer").text(data.num_move + " " + data.move + " " + data.result);
+      			$("#answer").text(data.move_id + " " + data.move + " " + data.result);
+      			if(data.result=="++++"){
+      				$("#move").fadeOut();
+      				$("#general").text("Weel done! YOU WIN!");
+      			}
+      			$("#move")[0].reset();
       		}
 			
 			function check_log() {

@@ -23,7 +23,7 @@ public class SessionsRepository {
 	public PlayerSession createSession(String id_player) {
 		PlayerSession session = new PlayerSession(valueOf(abs(random.nextLong())), id_player);
 		String sql = "insert into sessions (player_id, session_id) values (?, ?)";
-		database.execute(sql, session.id_player(), session.id_session());
+		database.execute(sql, session.player_id(), session.session_id());
 		return session;
 	}
 
