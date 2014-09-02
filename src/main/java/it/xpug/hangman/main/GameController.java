@@ -47,7 +47,7 @@ public class GameController extends Controller{
 			//prendo il player_id
 			String player_id = g_repository.set_finished(request.getParameter("game_id"));
 			//prendo lo score attuale
-			int game_score = g_repository.find_game_score(request.getParameter("game_id"));
+			//int game_score = g_repository.find_game_score(request.getParameter("game_id"));
 			//calcolo la nuova media:
 			//prendendo il totale
 			int total = g_repository.total_score(player_id);
@@ -55,8 +55,16 @@ public class GameController extends Controller{
 			//total = total + game_score;
 			//aggiorno la media
 			p_repository.add_finished_game(player_id, total);
+			float avg = p_repository.get_average(player_id);
+			int games = p_repository.get_games(player_id);
+			String[] name = {"move_id","move", "result",
+					"description", "average" , "games"};
+			String[] value = {mov.move_id() + "", mov.move(), mov.result(),
+					player_id, avg + "", games+""};
+			writeBody(toJson(name, value));
+			return;
 		}
-		String[] name = {"move_id","move", "result"};
+		String[] name = {"move_id","move", "result",};
 		String[] value = {mov.move_id() + "", mov.move(), mov.result()};
 		writeBody(toJson(name, value));
 	}

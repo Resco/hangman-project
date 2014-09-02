@@ -66,4 +66,22 @@ public class PlayersRepository {
 		database.execute(sql3, new_average, player_id);
 		
 	}
+
+	public float get_average(String nick) {
+		String sql = "select * from players where player_id = ?";
+		ListOfRows rows = database.select(sql, nick);
+		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
+		float average = (Float) row.get("average");
+		System.out.println("" + average);
+		return average;
+	}
+
+	public int get_games(String nick) {
+		String sql = "select * from players where player_id = ?";
+		ListOfRows rows = database.select(sql, nick);
+		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
+		int games = (Integer) row.get("num_games");
+		System.out.println("" + games);
+		return games;
+	}
 }

@@ -9,8 +9,15 @@
 	<body>
 		<header>
 			<h1>This is my Masterminds</h1>
-			<nav id="navigation">Please login or register</nav>
+			<nav id="navigation">
+				<div id='buttons'>
+				</div>
+				
+				<div id='target_general'>
+				</div>
+			</nav>
 		</header>
+		
 		<div id='main'>
 			
 			<div id='display'>&nbsp;</div>
@@ -63,10 +70,13 @@
 	      		
 			</section>
 			
-			<script id='game-info-template' type="application/x-tmpl-mustache">
-      			<p>Code of your game: {{ game_id }}</p>
-      			<p># of moves: {{ num_moves }}</p>
-   			</script>
+			<script id='moves-template' type="application/x-tmpl-mustache">
+      			<ul>
+      				{{ #items }}
+        			<li> {{ move_id }}: {{ move }} : {{result}}</li>
+      				{{ /items }}
+      			</ul>
+    		</script>
 				
 		</div>
 		
@@ -81,8 +91,22 @@
 		
 		<script src='/js/lib/jquery-1.10.2.min.js'></script>
 		<script src='/js/lib/mustache.js'></script>
+		<script src='/js/game.js'></script>
+    	<script src='/js/game_moves_view.js'></script>
 		
 		<script>
+		
+			var game;
+		
+			function render_template_navigate(name, avg, games) {
+        		var template = $('#navigate-template').html();
+        		var rendered = Mustache.render(template, {
+          			description: name,
+          			average : avg,
+          			games : games
+        		});
+        		$("#target_general").html(rendered);
+      		}
 			
 			$(document).ready(function() {
         		$("#register").submit(on_register);
@@ -107,6 +131,9 @@
       		function on_new_game_success (data){
       			$("#code").text(data.code);
       			$("#general").text(data.game_id);
+      			game = new Game();
+      			var moves_view = new GameMovesView("#moves-template", "#answer");
+      			game.add_observer(moves_view);
       		}
       		
       		function on_move (){
@@ -123,10 +150,12 @@
       		}
       		
       		function on_move_success (data){
-      			$("#answer").text(data.move_id + " " + data.move + " " + data.result);
+      			
+      			game.on_move(data.move_id, data.move, data.result);
       			if(data.result=="++++"){
       				$("#move").fadeOut();
       				$("#general").text("Weel done! YOU WIN!");
+      				render_template_navigate(data.description, data.average, data.games);
       			}
       			$("#move")[0].reset();
       		}
@@ -186,7 +215,10 @@
 				$("#display").text("");
 				
 				
-				$("#navigation").html( '<button type="button" id="newgame">New Game</button>' );
+				$("#buttons").html( '<button type="button" id="newgame">New Game</button>' );
+				
+				render_template_navigate(data.description, data.average, data.games);
+        		
       			$("#newgame").click(on_new_game);
       			
       		}
