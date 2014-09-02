@@ -37,30 +37,34 @@ public class GameController extends Controller{
 
 	public void move_service() throws IOException {
 		
+		//prende il codice da indovinare, dato l'id partita
 		String code = g_repository.find_game_code(request.getParameter("game_id"));
+		//calcola il risultato
 		String answer = compareCodes(code, request.getParameter("sequence"));
+		//prende il nome del player, dato l'id partita
 		String player = g_repository.find_game_player(request.getParameter("game_id"));
+		//prende la stringa della mossa
 		String move = request.getParameter("sequence");
+		//crea un oggetto move
 		Move mov = m_repository.createMove(request.getParameter("game_id"), player, move, answer);
+		//setta il punteggio della partita a seguito della mossa
 		g_repository.set_score(request.getParameter("game_id"));
+		//se il risultato è una vittoria
 		if(answer.equals("++++")){
-			//prendo il player_id
-			String player_id = g_repository.set_finished(request.getParameter("game_id"));
-			//prendo lo score attuale
-			//int game_score = g_repository.find_game_score(request.getParameter("game_id"));
-			//calcolo la nuova media:
-			//prendendo il totale
-			int total = g_repository.total_score(player_id);
-			//aggiungendo lo score dell'ultima
-			//total = total + game_score;
-			//aggiorno la media
-			p_repository.add_finished_game(player_id, total);
-			float avg = p_repository.get_average(player_id);
-			int games = p_repository.get_games(player_id);
+			//indica come finita la partita in corso (data fine)
+			g_repository.set_finished(request.getParameter("game_id"));
+			//calcola il punteggio su tutte le partite
+			int total = g_repository.total_score(player);
+			//aumenta conto partite finite e aggiorna media
+			p_repository.add_finished_game(player, total);
+			//prendi media e numero partite
+			float avg = p_repository.get_average(player);
+			int games = p_repository.get_games(player);
+			
 			String[] name = {"move_id","move", "result",
 					"description", "average" , "games"};
 			String[] value = {mov.move_id() + "", mov.move(), mov.result(),
-					player_id, avg + "", games+""};
+					player, avg + "", games+""};
 			writeBody(toJson(name, value));
 			return;
 		}

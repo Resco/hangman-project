@@ -8,13 +8,16 @@
 	
 	<body>
 		<header>
-			<h1>This is my Masterminds</h1>
+			<h1>This is my Mastermind</h1>
 			<nav id="navigation">
+			
 				<div id='buttons'>
+					<button type="button" id="newgame">New Game</button>
 				</div>
 				
 				<div id='target_general'>
 				</div>
+				
 			</nav>
 		</header>
 		
@@ -113,13 +116,14 @@
 				$("#login").submit(on_login);
 				$("#move").submit(on_move);
 				
-				$("#new_g").fadeOut();
+				$("#buttons").hide();
+				$("#new_g").hide();
 				check_log();
       		});
       		
       		function on_new_game() {
-      			$("#new_g").fadeIn();
-      			$("#move").fadeIn();
+      			$("#new_g").show();
+      			$("#move").show();
       			//creazione della partita
       			$.ajax({
           			url: '/newgame',
@@ -153,8 +157,8 @@
       			
       			game.on_move(data.move_id, data.move, data.result);
       			if(data.result=="++++"){
-      				$("#move").fadeOut();
-      				$("#general").text("Weel done! YOU WIN!");
+      				$("#move").hide();
+      				$("#general").text("Well done! YOU WIN!");
       				render_template_navigate(data.description, data.average, data.games);
       			}
       			$("#move")[0].reset();
@@ -186,8 +190,24 @@
       		}
 			
 			function on_register_success(data) {
-				$("#display").text(data.description);
-				$("#register")[0].reset();
+				if(data.description=="pw_leng"){
+					$("#display").text("Password too short (8 characters at least)");
+				}
+				else if(data.description=="pw_equal"){
+					$("#display").text("Please digit the same password twice");
+				}
+				else if(data.description=="mail"){
+					$("#display").text("Your mail must contain the @");
+				}
+				else if(data.description=="nick_exists"){
+					$("#display").text("Please digit another nickname");
+				}
+				else{
+					$("#display").text(data.description);
+					$("#register")[0].reset();
+				}
+				
+				
       		}
 
       		function on_register_error(data) {
@@ -209,18 +229,25 @@
       		}
 			
 			function on_login_success(data) {
+				if(data.description=="pw"){
+					$("#display").text("Try another password");
+				}
+				else if(data.description=="nick_exist"){
+					$("#display").text("Try another nickname");
+				}
+				else{
 				$("#login")[0].reset();
-				$("#log").fadeOut();
-				$("#reg").fadeOut();
+				$("#log").hide();
+				$("#reg").hide();
 				$("#display").text("");
 				
 				
-				$("#buttons").html( '<button type="button" id="newgame">New Game</button>' );
+				$("#buttons").show();
 				
 				render_template_navigate(data.description, data.average, data.games);
         		
       			$("#newgame").click(on_new_game);
-      			
+      			}
       		}
 
       		function on_login_error(data) {

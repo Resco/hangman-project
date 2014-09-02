@@ -59,9 +59,7 @@ public class PlayersRepository {
 		num_games = num_games +1;
 		String sql2 = "update players set num_games = ? where player_id = ?";
 		database.execute(sql2, num_games, player_id);
-		System.out.println("numb games : " + num_games + " total score : " + total_score);
 		float new_average = ((float)total_score) / ((float)num_games);
-		System.out.println(new_average + "");
 		String sql3 = "update players set average = ? where player_id = ?";
 		database.execute(sql3, new_average, player_id);
 		
@@ -72,7 +70,6 @@ public class PlayersRepository {
 		ListOfRows rows = database.select(sql, nick);
 		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
 		float average = (Float) row.get("average");
-		System.out.println("" + average);
 		return average;
 	}
 
@@ -81,7 +78,6 @@ public class PlayersRepository {
 		ListOfRows rows = database.select(sql, nick);
 		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
 		int games = (Integer) row.get("num_games");
-		System.out.println("" + games);
 		return games;
 	}
 }

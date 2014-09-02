@@ -68,18 +68,16 @@ public class GamesRepository {
 		
 	}
 
-	public String set_finished(String parameter) {
+	public void set_finished(String parameter) {
 		Timestamp finished = new Timestamp(new Date().getTime());
 		String sql = "update games set finished = ? where game_id = ?";
 		database.execute(sql, finished, parameter);
-		String player_id = find_game_player(parameter);
-		return player_id;
+		
 	}
 
 	public void set_score(String parameter) {
 		int score = find_game_score(parameter);
 		score = score + 1;
-		System.out.println(score + "");
 		String sql = "update games set score = ? where game_id = ?";
 		database.execute(sql, score, parameter);
 

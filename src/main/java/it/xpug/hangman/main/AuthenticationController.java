@@ -21,10 +21,10 @@ public class AuthenticationController extends Controller {
 		String nick = request.getParameter("nickname");
 		String pw = request.getParameter("password");
 		if(!p_repository.nicknameExists(nick)){
-			writeBody(toJson("description", "This nickname doesn't exist"));
+			writeBody(toJson("description", "nick_exist"));
 		}
 		else if(!p_repository.correctPassword(nick, pw)){
-			writeBody(toJson("description", "Try another password"));
+			writeBody(toJson("description", "pw"));
 		}
 		else{
 			float average = p_repository.get_average(nick);
