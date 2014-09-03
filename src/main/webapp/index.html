@@ -12,7 +12,8 @@
 			<nav id="navigation">
 			
 				<div id='buttons'>
-					<button type="button" id="newgame">New Game</button>
+					<button type="button" id="game">Game</button>
+					<button type="button" id="rank_button">Ranking</button>
 				</div>
 				
 				<div id='target_general'>
@@ -60,6 +61,7 @@
 			<section id='new_g'>
 				<h3>Your game</h3>
 				<div id='info_game'>
+					<button type="button" id="newgame">New Game</button>
 					<p id='general'>&nbsp;</p>
 					<p id='code'>&nbsp;</p>
 					<p id='answer'>&nbsp;</p>
@@ -73,13 +75,14 @@
 	      		
 			</section>
 			
-			<script id='moves-template' type="application/x-tmpl-mustache">
-      			<ul>
-      				{{ #items }}
-        			<li> {{ move_id }}: {{ move }} : {{result}}</li>
-      				{{ /items }}
-      			</ul>
-    		</script>
+			<section id='rank'>
+				<h3>General ranking</h3>
+				<div id='ranking'>
+					Prova
+				</div>
+			</section>
+			
+			
 				
 		</div>
 		
@@ -90,6 +93,14 @@
 		
 		<script id='navigate-template' type="application/x-tmpl-mustache">
       		Welcome {{description}}. Your average is {{average}} on {{games}} games.
+    	</script>
+    	
+    	<script id='moves-template' type="application/x-tmpl-mustache">
+      		<ul>
+      			{{ #items }}
+        		<li> {{ move_id }}: {{ move }} : {{result}}</li>
+      			{{ /items }}
+      		</ul>
     	</script>
 		
 		<script src='/js/lib/jquery-1.10.2.min.js'></script>
@@ -115,14 +126,47 @@
         		$("#register").submit(on_register);
 				$("#login").submit(on_login);
 				$("#move").submit(on_move);
+				$("#newgame").click(on_new_game);
+				$("#rank_button").click(on_g_rank);
+				$("#game").click(on_game);
 				
 				$("#buttons").hide();
 				$("#new_g").hide();
+				$("#rank").hide();
 				check_log();
       		});
       		
-      		function on_new_game() {
+      		<!--Navigation Buttons Functions-->
+      		
+      		function on_g_rank(){
+      			$("#new_g").hide();
+      			$("#rank").show();
+      			on_g_rank_builder();
+      		}
+      		
+      		function on_game(){
       			$("#new_g").show();
+      			$("#rank").hide();
+      		}
+      		
+      		<!--Global Rank Builder-->
+      		
+      		function on_g_rank_builder(){
+      			$("#ranking").text("entrato in builder");
+      			$.ajax({
+          			url: '/g_rank',
+          			method: 'get',
+          			success: on_g_rank_builder_success,
+        		});	
+      		}
+      		
+      		function on_g_rank_builder_success (data){
+      			$("#ranking").text(JSON.stringify(data));
+      		}
+      		
+      		<!--New Game-->
+      		
+      		function on_new_game() {
       			$("#move").show();
       			//creazione della partita
       			$.ajax({
@@ -133,12 +177,15 @@
       		}
       		
       		function on_new_game_success (data){
+      			$("#answer").text("");
       			$("#code").text(data.code);
       			$("#general").text(data.game_id);
       			game = new Game();
       			var moves_view = new GameMovesView("#moves-template", "#answer");
       			game.add_observer(moves_view);
       		}
+      		
+      		<!--Move-->
       		
       		function on_move (){
       			$.ajax({
@@ -164,6 +211,8 @@
       			$("#move")[0].reset();
       		}
 			
+			<!--Check Log-->
+			
 			function check_log() {
         		$.ajax({
           			url: '/logged',
@@ -172,6 +221,7 @@
         		})
       		}
 			
+			<!--Register-->
 			
 			function on_register() {
         		$.ajax({
@@ -214,6 +264,8 @@
 				$("#display").text(JSON.stringify(data.responseJSON));
       		}
 			
+			<!--Login-->
+			
 			function on_login() {
         		$.ajax({
           			url: '/authenticate',
@@ -246,7 +298,7 @@
 				
 				render_template_navigate(data.description, data.average, data.games);
         		
-      			$("#newgame").click(on_new_game);
+      			
       			}
       		}
 
