@@ -102,6 +102,26 @@
       			{{ /items }}
       		</ul>
     	</script>
+    	
+    	<script id="global_template" type="application/x-tmpl-mustache">
+		<table class="tbl_globalHistory">
+			<tr>
+				<th>Pos</th>
+				<th>Users</th>
+				<th>Average score</th>
+				<th>Games</th>
+			</tr>
+			{{#games}}
+			<tr id="pos_{{ pos }}">
+				<td class="pos">{{ pos }}</td>
+				<td class="user">{{ id }}</td>
+				<td class="score">{{ avg }}</td>
+				<td class="ngames">{{ games }}</td>
+			</tr>
+			{{/games}}
+		</table>
+
+	</script>
 		
 		<script src='/js/lib/jquery-1.10.2.min.js'></script>
 		<script src='/js/lib/mustache.js'></script>
@@ -162,6 +182,9 @@
       		
       		function on_g_rank_builder_success (data){
       			$("#ranking").text(JSON.stringify(data));
+      			var template = $('#global_template').html();
+				var rendered = Mustache.render(template, data);
+				$("#ranking").html(rendered);
       		}
       		
       		<!--New Game-->

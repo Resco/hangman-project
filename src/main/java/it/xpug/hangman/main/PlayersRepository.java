@@ -80,4 +80,10 @@ public class PlayersRepository {
 		int games = (Integer) row.get("num_games");
 		return games;
 	}
+
+	public ListOfRows select_global_rank() {
+		String sql = "select * from players order by average";
+		ListOfRows rows = database.select(sql);
+		return rows;
+	}
 }
