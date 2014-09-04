@@ -57,5 +57,10 @@ public class HangmanServlet extends HttpServlet {
 			rank_controller.service();
 			return;
 		}
+		
+		if (request.getRequestURI().equals("/p_hist")) {
+			rank_controller.service_player();
+			return;
+		}
 	}
 }

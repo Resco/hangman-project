@@ -78,8 +78,8 @@
 			<section id='rank'>
 				<h3>General ranking</h3>
 				<div id='ranking'>
-					Prova
 				</div>
+				
 			</section>
 			
 			
@@ -104,23 +104,43 @@
     	</script>
     	
     	<script id="global_template" type="application/x-tmpl-mustache">
-		<table class="tbl_globalHistory">
+		<table>
 			<tr>
 				<th>Pos</th>
 				<th>Users</th>
 				<th>Average score</th>
 				<th>Games</th>
 			</tr>
+			{{#players}}
+			<tr>
+				<td id="pos">{{ pos }}</td>
+				<td id="user"><a href='javascript:on_player_history("{{id}}")'> {{id}} </a></td>
+				<td id="score">{{ avg }}</td>
+				<td id="ngames">{{ games }}</td>
+			</tr>
+			{{/players}}
+		</table>
+		</script>
+		
+		<script id="history_template" type="application/x-tmpl-mustache">
+		<table>
+			<tr>
+				<th>Started</th>
+				<th>Finished</th>
+				<th>Score</th>
+			</tr>
 			{{#games}}
-			<tr id="pos_{{ pos }}">
-				<td class="pos">{{ pos }}</td>
-				<td class="user">{{ id }}</td>
-				<td class="score">{{ avg }}</td>
-				<td class="ngames">{{ games }}</td>
+			<tr>
+				<td id="started"> {{ started }} </td>
+				<td id="finished"> {{finished}} </td>
+				<td id="score"> {{ score }} </td>
 			</tr>
 			{{/games}}
 		</table>
-
+		
+		<button type="button" id="back">Back</button>
+		<script>$("#back").click(on_g_rank);</script>
+		
 	</script>
 		
 		<script src='/js/lib/jquery-1.10.2.min.js'></script>
@@ -132,6 +152,7 @@
 		
 			var game;
 		
+			
 			function render_template_navigate(name, avg, games) {
         		var template = $('#navigate-template').html();
         		var rendered = Mustache.render(template, {
@@ -149,6 +170,7 @@
 				$("#newgame").click(on_new_game);
 				$("#rank_button").click(on_g_rank);
 				$("#game").click(on_game);
+				$("#back").click(on_g_rank);
 				
 				$("#buttons").hide();
 				$("#new_g").hide();
@@ -172,7 +194,6 @@
       		<!--Global Rank Builder-->
       		
       		function on_g_rank_builder(){
-      			$("#ranking").text("entrato in builder");
       			$.ajax({
           			url: '/g_rank',
           			method: 'get',
@@ -183,6 +204,26 @@
       		function on_g_rank_builder_success (data){
       			$("#ranking").text(JSON.stringify(data));
       			var template = $('#global_template').html();
+				var rendered = Mustache.render(template, data);
+				$("#ranking").html(rendered);
+      		}
+      		
+     		<!--Player History-->
+      		
+      		function on_player_history(id){
+      			$.ajax({
+          			url: '/p_hist',
+          			method: 'post',
+          			data: {
+            			nickname: id,
+          			},
+          			success: on_player_history_success,
+        		});	
+      		}
+      		
+      		function on_player_history_success (data){
+      			$("#ranking").text(JSON.stringify(data));
+      			var template = $('#history_template').html();
 				var rendered = Mustache.render(template, data);
 				$("#ranking").html(rendered);
       		}

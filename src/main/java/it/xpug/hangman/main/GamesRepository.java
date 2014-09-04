@@ -96,4 +96,10 @@ public class GamesRepository {
 		}
 		return total;
 	}
+
+	public ListOfRows select_player_games(String nickname) {
+		String sql = "select * from games where player_id = ? order by started";
+		ListOfRows rows = database.select(sql, nickname);
+		return rows;
+	}
 }
