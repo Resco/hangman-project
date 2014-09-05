@@ -12,8 +12,9 @@
 			<nav id="navigation">
 			
 				<div id='buttons'>
-					<button type="button" id="game">Game</button>
-					<button type="button" id="rank_button">Ranking</button>
+					<a href='javascript:on_game()'> Game </a>
+					<a href='javascript:on_g_rank()'> Ranking </a>
+					<button type="button" id="cookie_del">Delete</button>
 				</div>
 				
 				<div id='target_general'>
@@ -30,10 +31,10 @@
 				<h3>Login</h3>
 				<form id='login'>
 			        <label for='nick_login'>Your Nickname</label><br/>
-			        <input type="text" name="nick_login" value="" id='nick_login'/><br/>
+			        <input type="text" class="login_input" name="nick_login" value="" id='nick_login'/><br/>
 			
 			        <label for="password_login">Your Password</label><br/>
-			        <input type="password" name="password_login" value="" id="password_login"/><br/>
+			        <input type="password" class="login_input" name="password_login" value="" id="password_login"/><br/>
 			
 			        <input type="submit" value="Login" />
 	   			</form>
@@ -43,16 +44,16 @@
 				<h3>Register</h3>
 				<form id='register'>
 					<label for='nick_reg'>Nickname</label><br/>
-				    <input type="text" name="nick_reg" value="" id='nick_reg'/><br/>
+				    <input type="text" class="register_input" name="nick_reg" value="" id='nick_reg'/><br/>
 				
 				    <label for="password_reg">Password</label><br/>
-				    <input type="password" name="password_reg" value="" id="password_reg"/><br/>
+				    <input type="password" class="register_input" name="password_reg" value="" id="password_reg"/><br/>
 						
 					<label for="re_password_reg">Repeat Password</label><br/>
-				    <input type="password" name="re_password_reg" value="" id="re_password_reg"/><br/>
+				    <input type="password" class="register_input" name="re_password_reg" value="" id="re_password_reg"/><br/>
 						
 					<label for='mail_reg'>Mail</label><br/>
-				    <input type='text' name="mail_reg" value="" id='mail_reg'/><br/>
+				    <input type='text' class="register_input" name="mail_reg" value="" id='mail_reg'/><br/>
 						
 				    <input type="submit" value="Register" />    
 	      		</form>
@@ -62,14 +63,14 @@
 				<h3>Your game</h3>
 				<div id='info_game'>
 					<button type="button" id="newgame">New Game</button>
-					<p id='general'>&nbsp;</p>
-					<p id='code'>&nbsp;</p>
+					<p id='general'>Let's play a new game!</p>
 					<p id='answer'>&nbsp;</p>
+					<p id='game_code' style='display:none'>&nbsp;</p>
 				</div>
 				
 				<form id='move'>	
 					<label for='seq'>Sequence</label><br/>
-				    <input type='text' name="seq" value="" id='seq' maxlength="4"/><br/>
+				    <input type='text' autocomplete="off" name="seq" value="" id='seq' maxlength="4"/><br/>
 				    <input type="submit" value="Send" />    
 	      		</form>
 	      		
@@ -151,7 +152,8 @@
 		<script>
 		
 			var game;
-		
+			var came_id;
+			var session_id;
 			
 			function render_template_navigate(name, avg, games) {
         		var template = $('#navigate-template').html();
@@ -164,19 +166,25 @@
       		}
 			
 			$(document).ready(function() {
+				 
         		$("#register").submit(on_register);
 				$("#login").submit(on_login);
 				$("#move").submit(on_move);
 				$("#newgame").click(on_new_game);
 				$("#rank_button").click(on_g_rank);
-				$("#game").click(on_game);
-				$("#back").click(on_g_rank);
+				$("#cookie_del").click(on_cookie_del);
+				
 				
 				$("#buttons").hide();
 				$("#new_g").hide();
 				$("#rank").hide();
 				check_log();
       		});
+      		
+      		function on_cookie_del(){
+      			console.log("username='" + session_id + "'; expires=Thu, 01 Jan 1970 00:00:00 UTC");
+      			document.cookie = "session_id='" + session_id + "'; expires=Thu, 01 Jan 1970 00:00:00 UTC"; 
+      		}
       		
       		<!--Navigation Buttons Functions-->
       		
@@ -243,7 +251,9 @@
       		function on_new_game_success (data){
       			$("#answer").text("");
       			$("#code").text(data.code);
-      			$("#general").text(data.game_id);
+      			$("#general").text("Try to guess, if you can... ");
+      			$("#game_code").text(data.game_id);
+      			game_id = data.game_id
       			game = new Game();
       			var moves_view = new GameMovesView("#moves-template", "#answer");
       			game.add_observer(moves_view);
@@ -257,7 +267,7 @@
           			method: 'post',
           			success: on_move_success,
           			data: {
-            			game_id: $("#general").text(),
+            			game_id: game_id,
             			sequence: $("#seq").val(),
           			},
         		});
@@ -288,6 +298,8 @@
 			<!--Register-->
 			
 			function on_register() {
+				$(".register_input").attr("style", "border-color: default");
+				$(".login_input").attr("style", "border-color: default");
         		$.ajax({
           			url: '/register',
           			method: 'post',
@@ -306,19 +318,24 @@
 			function on_register_success(data) {
 				if(data.description=="pw_leng"){
 					$("#display").text("Password too short (8 characters at least)");
+					$("#password_reg").attr("style", "border-color:red");
 				}
 				else if(data.description=="pw_equal"){
 					$("#display").text("Please digit the same password twice");
+					$("#re_password_reg").attr("style", "border-color:red");
 				}
 				else if(data.description=="mail"){
-					$("#display").text("Your mail must contain the @");
+					$("#display").text("Your password must contain @");
+					$("#mail_reg").attr("style", "border-color:red");
 				}
 				else if(data.description=="nick_exists"){
 					$("#display").text("Please digit another nickname");
+					$("#nick_reg").attr("style", "border-color:red");
 				}
 				else{
 					$("#display").text(data.description);
 					$("#register")[0].reset();
+					$("#login")[0].reset();
 				}
 				
 				
@@ -331,6 +348,8 @@
 			<!--Login-->
 			
 			function on_login() {
+				$(".register_input").attr("style", "border-color: default");
+				$(".login_input").attr("style", "border-color: default");
         		$.ajax({
           			url: '/authenticate',
           			method: 'post',
@@ -347,23 +366,27 @@
 			function on_login_success(data) {
 				if(data.description=="pw"){
 					$("#display").text("Try another password");
+					$("#password_login").attr("style", "border-color:red");
 				}
 				else if(data.description=="nick_exist"){
 					$("#display").text("Try another nickname");
+					$("#nick_login").attr("style", "border-color:red");
 				}
 				else{
 				$("#login")[0].reset();
 				$("#log").hide();
 				$("#reg").hide();
 				$("#display").text("");
-				
+				$("#register")[0].reset();
+				$("#login")[0].reset();
+				session_id = data.session_id;
 				
 				$("#buttons").show();
 				
 				render_template_navigate(data.description, data.average, data.games);
         		
-      			
       			}
+      			
       		}
 
       		function on_login_error(data) {

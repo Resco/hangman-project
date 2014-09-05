@@ -30,6 +30,7 @@ public class GameController extends Controller{
 				Game game = g_repository.createGame(session.player_id());
 				String[] name = {"game_id","code"};
 				String[] value = {game.game_id(),game.code()};
+				System.out.println(game.code());
 				writeBody(toJson(name, value));
 			}
 	}

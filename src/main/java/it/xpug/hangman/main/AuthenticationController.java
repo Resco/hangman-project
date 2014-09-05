@@ -29,10 +29,10 @@ public class AuthenticationController extends Controller {
 		else{
 			float average = p_repository.get_average(nick);
 			int games = p_repository.get_games(nick);
-			String[] name = {"description","average", "games"};
-			String[] value = {nick,average + "", games + ""};
-			writeBody(toJson(name, value));
 			PlayerSession session = s_repository.createSession(nick);
+			String[] name = {"description","average", "games", "session_id"};
+			String[] value = {nick,average + "", games + "", session.session_id()};
+			writeBody(toJson(name, value));
 			response.addCookie(new Cookie("session_id", session.session_id()));
 		}
 	}
@@ -44,8 +44,8 @@ public class AuthenticationController extends Controller {
 				String nick = session.player_id();
 				float average = p_repository.get_average(nick);
 				int games = p_repository.get_games(nick);
-				String[] name = {"description","average","games"};
-				String[] value = {nick,average +"", games + ""};
+				String[] name = {"description","average","games", "session_id"};
+				String[] value = {nick,average +"", games + "", cookie.getValue() + ""};
 				writeBody(toJson(name, value));
 			}
 			
