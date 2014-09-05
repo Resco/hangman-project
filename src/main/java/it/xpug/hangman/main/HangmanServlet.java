@@ -62,5 +62,10 @@ public class HangmanServlet extends HttpServlet {
 			rank_controller.service_player();
 			return;
 		}
+		
+		if (request.getRequestURI().equals("/logout")) {
+			a_controller.logout_service();
+			return;
+		}
 	}
 }

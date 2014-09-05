@@ -55,4 +55,9 @@ public class AuthenticationController extends Controller {
 		}
 		
 	}
+	
+	public void logout_service() throws IOException{
+		s_repository.delete_session(request.getParameter("session_id"));
+		writeBody(toJson("status", "ok"));
+	}
 }

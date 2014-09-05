@@ -39,6 +39,12 @@ public class SessionsRepository {
 			return null;
 		}
 	}
+
+	public void delete_session(String parameter) {
+		String sql = "delete from sessions where session_id = ?";
+		database.execute(sql, parameter);
+		
+	}
 	
 	
 
