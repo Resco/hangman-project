@@ -25,9 +25,9 @@
 		
 		<div id='main'>
 			
-			<div id='display'>&nbsp;</div>
+			<div id='display'>Welcome to Mastermind. Login or register right here...</div>
 			
-			<section id='log' style="display: none">
+			<section id='log' >
 				<h3>Login</h3>
 				<form id='login'>
 			        <label for='nick_login'>Your Nickname</label><br/>
@@ -37,7 +37,9 @@
 			        <input type="password" class="login_input" name="password_login" value="" id="password_login"/><br/>
 			
 			        <input type="submit" value="Login" />
+			        
 	   			</form>
+	   			<img id="waiting_log" src="spinner.gif" style="display: none"></img>
 			</section>
 				
 			<section id='reg'>
@@ -57,6 +59,7 @@
 						
 				    <input type="submit" value="Register" />    
 	      		</form>
+	      		<img id="waiting_reg" src="spinner.gif" style="display: none"></img>
 			</section>	
 			
 			<section id='new_g' class='inside'>
@@ -71,9 +74,10 @@
 				<form id='move'>	
 					<label for='seq'>Sequence</label><br/>
 				    <input type='text' autocomplete="off" name="seq" value="" id='seq' maxlength="4"/><br/>
-				    <input type="submit" value="Send" />    
+				    <input type="submit" value="Send" id="send_submit" disabled="disabled"/> 
+				    <img id="waiting_send" src="spinner.gif" style="display: none"></img>   
 	      		</form>
-	      		
+	      		<img id="waiting_new_game" src="spinner.gif" style="display: none"></img>   
 			</section>
 			
 			<section id='rank' class='inside'>
@@ -97,15 +101,26 @@
     	</script>
     	
     	<script id='moves-template' type="application/x-tmpl-mustache">
-      		<ul>
-      			{{ #items }}
-        		<li> {{ move_id }}: {{ move }} : {{result}}</li>
-      			{{ /items }}
-      		</ul>
+    	<table border="1" id="moves_table">
+    		<tr>
+				<th>#</th>
+				<th>Move</th>
+				<th>Result</th>
+			</tr>
+			
+      		{{ #items }}
+      		<tr>
+      			<td>{{ move_id }}</td>
+      			<td>{{ move }}</td>
+      			<td>{{result}}</td>
+      		</tr>
+      		{{ /items }}
+      		
+      	</table>
     	</script>
     	
     	<script id="global_template" type="application/x-tmpl-mustache">
-		<table>
+		<table border="1" >
 			<tr>
 				<th>Pos</th>
 				<th>Users</th>
@@ -124,7 +139,7 @@
 		</script>
 		
 		<script id="history_template" type="application/x-tmpl-mustache">
-		<table>
+		<table border="1">
 			<tr>
 				<th>Started</th>
 				<th>Finished</th>
@@ -170,14 +185,11 @@
 				$("#login").submit(on_login);
 				$("#move").submit(on_move);
 				$("#newgame").click(on_new_game);
-				$("#rank_button").click(on_g_rank);
 				$("#logout").click(on_logout);
-				$("#log").show();
 				
 				
-				$("#buttons").hide();
-				$("#new_g").hide();
-				$("#rank").hide();
+				$("#navigation").hide();
+				$(".inside").hide();;
 				check_log();
       		});
       		
@@ -185,6 +197,7 @@
       		
       		function on_logout(){
       			document.cookie = "session_id='" + session_id + "'; expires=Thu, 01 Jan 1970 00:00:00 UTC"; 
+      			
       			$.ajax({
           			url: '/logout',
           			method: 'post',
@@ -197,10 +210,8 @@
       		
       		function on_logout_success(data){
 				$("#display").text("");
-				$("#register")[0].reset();
-				$("#login")[0].reset();
 				
-				$("#buttons").hide();
+				$("#navigation").hide();
 				$(".inside").hide();
 				$("#log").show();
 				$("#reg").show();
@@ -259,7 +270,9 @@
       		<!--New Game-->
       		
       		function on_new_game() {
-      			$("#move").show();
+      			$("#move").hide();
+      			$("#info_game").hide();
+      			$("#waiting_new_game").show();      			
       			//creazione della partita
       			$.ajax({
           			url: '/newgame',
@@ -269,6 +282,10 @@
       		}
       		
       		function on_new_game_success (data){
+      			$("#move").show();
+      			$("#info_game").show();
+      			$("#waiting_new_game").hide();
+      			$("#send_submit").removeAttr("disabled");
       			$("#answer").text("");
       			$("#code").text(data.code);
       			$("#general").text("Try to guess, if you can... ");
@@ -282,6 +299,8 @@
       		<!--Move-->
       		
       		function on_move (){
+      			$("#send_submit").hide();
+      			$("#waiting_send").show();
       			$.ajax({
           			url: '/move',
           			method: 'post',
@@ -295,12 +314,19 @@
       		}
       		
       		function on_move_success (data){
-      			
+      			$("#send_submit").show();
+      			$("#waiting_send").hide();
+      			if(data.description=="short"){
+      				$("#display").text("Too short");
+      			}
+      			else{
       			game.on_move(data.move_id, data.move, data.result);
+      			
       			if(data.result=="++++"){
       				$("#move").hide();
       				$("#general").text("Well done! YOU WIN!");
       				render_template_navigate(data.description, data.average, data.games);
+      			}
       			}
       			$("#move")[0].reset();
       		}
@@ -320,6 +346,9 @@
 			function on_register() {
 				$(".register_input").attr("style", "border-color: default");
 				$(".login_input").attr("style", "border-color: default");
+				$("#register").hide();
+				$("#waiting_reg").show();
+				
         		$.ajax({
           			url: '/register',
           			method: 'post',
@@ -336,9 +365,13 @@
       		}
 			
 			function on_register_success(data) {
+				$("#display").attr("style", "color:red");
+				$("#register").show();
+				$("#waiting_reg").hide();
 				if(data.description=="pw_leng"){
 					$("#display").text("Password too short (8 characters at least)");
 					$("#password_reg").attr("style", "border-color:red");
+					
 				}
 				else if(data.description=="pw_equal"){
 					$("#display").text("Please digit the same password twice");
@@ -353,7 +386,9 @@
 					$("#nick_reg").attr("style", "border-color:red");
 				}
 				else{
+					$("#display").attr("style", "black");
 					$("#display").text(data.description);
+					
 					$("#register")[0].reset();
 					$("#login")[0].reset();
 				}
@@ -370,6 +405,9 @@
 			function on_login() {
 				$(".register_input").attr("style", "border-color: default");
 				$(".login_input").attr("style", "border-color: default");
+				$("#login").hide();
+				$("#waiting_log").show();
+				
         		$.ajax({
           			url: '/authenticate',
           			method: 'post',
@@ -384,6 +422,9 @@
       		}
 			
 			function on_login_success(data) {
+				$("#login").show();
+				$("#waiting_log").hide();
+				$("#display").attr("style", "color:red");
 				if(data.description=="pw"){
 					$("#display").text("Try another password");
 					$("#password_login").attr("style", "border-color:red");
@@ -393,15 +434,20 @@
 					$("#nick_login").attr("style", "border-color:red");
 				}
 				else{
-				$("#login")[0].reset();
+				$("#display").attr("style", "color:black");
 				$("#log").hide();
 				$("#reg").hide();
+				
 				$("#display").text("");
+				
 				$("#register")[0].reset();
 				$("#login")[0].reset();
+				
 				session_id = data.session_id;
 				
-				$("#buttons").show();
+				$("#navigation").show();
+				
+				$("#send_submit").attr("disabled","disabled");
 				
 				render_template_navigate(data.description, data.average, data.games);
         		

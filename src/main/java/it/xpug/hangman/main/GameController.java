@@ -40,6 +40,11 @@ public class GameController extends Controller{
 		
 		//prende il codice da indovinare, dato l'id partita
 		String code = g_repository.find_game_code(request.getParameter("game_id"));
+		//check sulla lunghezza
+		if(request.getParameter("sequence").length()<4){
+			writeBody(toJson("description", "short"));
+			return;
+		}
 		//calcola il risultato
 		String answer = compareCodes(code, request.getParameter("sequence"));
 		//prende il nome del player, dato l'id partita
@@ -51,6 +56,7 @@ public class GameController extends Controller{
 		//setta il punteggio della partita a seguito della mossa
 		g_repository.set_score(request.getParameter("game_id"));
 		//se il risultato è una vittoria
+		
 		if(answer.equals("++++")){
 			//indica come finita la partita in corso (data fine)
 			g_repository.set_finished(request.getParameter("game_id"));
