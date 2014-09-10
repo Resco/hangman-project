@@ -43,6 +43,16 @@ h3{
     width: auto;
 }
 
+#author{
+    float: left;
+    width: auto;
+}
+
+#exam{
+    float: right;
+    width: auto;
+}
+
 #log{
     float: left;
 }
@@ -60,6 +70,7 @@ footer{
     padding: 5px;
     border-style: solid;
     border-width: 1px;
+    overflow: hidden
 }
 header{
     width: 800px;

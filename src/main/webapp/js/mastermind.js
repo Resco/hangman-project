@@ -287,11 +287,17 @@ function on_logout(){
 function on_logout_success(data){
 	$("#logout").show();
 	$("#waiting_logout").hide();
+	
 	$("#display").html("&nbsp;");
 	
 	$("#buttons").hide();
 	$("#target_general").hide();
 	$("#welcome_text").show();
+	
+	$("#general").text("Let's play a new game");
+	$("#answer").html("&nbsp;");
+	$("#send_submit").attr("disabled", "disabled");
+	
 	$(".inside").hide();
 	$(".outside").show();
 }

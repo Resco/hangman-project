@@ -90,7 +90,6 @@ public class GameController extends Controller{
 			}
 		}
 		for (int j=0; j<4; j++){
-			if(checked[j]==false){
 				for(int k=0; k<4; k++){
 					if(checked[k]==false){
 						if(codeSubmitted.charAt(j)==codeToGuess.charAt(k)){
@@ -100,7 +99,7 @@ public class GameController extends Controller{
 						}
 					}
 				}
-			}
+			
 		}
 		return answer;
 		
