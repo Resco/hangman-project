@@ -8,4 +8,4 @@
 set -e
 cd "$(dirname $0)/.."
 
-java -cp target/classes:"target/dependency/*" it.xpug.hangman.main.Main
+java -cp target/classes:"target/dependency/*" it.xpug.mastermind.main.Main

@@ -1,9 +1,4 @@
-package it.xpug.hangman.main;
-
-import static java.lang.Math.abs;
-import static java.lang.String.valueOf;
-
-import java.util.Random;
+package it.xpug.mastermind.main;
 
 import it.xpug.generic.db.Database;
 import it.xpug.generic.db.ListOfRows;
@@ -16,6 +11,8 @@ public class MovesRepository {
 	}
 	
 	public Move createMove(String game_id, String player_id, String move, String result) {
+		//crea e inserisce in db una mossa
+		
 		String sql2 = "select * from moves where game_id = ?";
 		ListOfRows rows = database.select(sql2, game_id);
 		int size = rows.size() + 1;

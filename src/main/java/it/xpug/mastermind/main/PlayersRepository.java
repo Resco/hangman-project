@@ -1,4 +1,4 @@
-package it.xpug.hangman.main;
+package it.xpug.mastermind.main;
 
 import java.security.MessageDigest;
 import java.util.HashMap;
@@ -14,6 +14,8 @@ public class PlayersRepository {
 	}
 
 	public void add(Player player) {
+		//inserisce in db un nuovo player
+		
 		String sql = "insert into players (player_id, mail, salt, cript, num_games, average)" +
 				" values (?, ?, ?, ?, ?, ?)";
 		database.execute(sql, player.player_id(), player.mail(),
@@ -21,12 +23,16 @@ public class PlayersRepository {
 	}
 
 	public boolean nicknameExists(String nick) {
+		//controlla se il nickname esiste già in db
+		
 		String sql = "select * from players where player_id = ?";
 		ListOfRows rows = database.select(sql, nick);
 		return rows.size() != 0;
 	}
 
 	public boolean correctPassword (String nick, String password){
+		//controlla se la password inserita corrisponde al nickname
+		
 		String sql = "select * from players where player_id = ?";
 		ListOfRows rows = database.select(sql, nick);
 		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
@@ -38,6 +44,7 @@ public class PlayersRepository {
 
 
 	private String encryptedPassword(String password, String salt) {
+		//crea la password criptata
 		try {
 			String seed = "" + password + salt;
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -50,8 +57,9 @@ public class PlayersRepository {
 	}
 
 	public void add_finished_game(String player_id, int total_score) {
-		//aumenta il num_games e ricalcola la media
-		//prendo il numero di partite finite
+		//setta il numero delle partite giocate e la media di un giocatore,
+		//aggiornando al risultato dell'ultima partita finita
+		
 		String sql = "select * from players where player_id = ?";
 		ListOfRows rows = database.select(sql, player_id);
 		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
@@ -66,6 +74,9 @@ public class PlayersRepository {
 	}
 
 	public float get_average(String nick) {
+		//restituisce il valore della media dei punti di un player,
+		//dato l'id del player
+		
 		String sql = "select * from players where player_id = ?";
 		ListOfRows rows = database.select(sql, nick);
 		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
@@ -74,6 +85,9 @@ public class PlayersRepository {
 	}
 
 	public int get_games(String nick) {
+		//restituisce il numero di partite terminate da un player,
+		//dato l'id del player
+		
 		String sql = "select * from players where player_id = ?";
 		ListOfRows rows = database.select(sql, nick);
 		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
@@ -82,6 +96,8 @@ public class PlayersRepository {
 	}
 
 	public ListOfRows select_global_rank() {
+		//restituisce la lista delle righe della tabella player,
+		//ordinate per media
 		String sql = "select * from players order by average";
 		ListOfRows rows = database.select(sql);
 		return rows;

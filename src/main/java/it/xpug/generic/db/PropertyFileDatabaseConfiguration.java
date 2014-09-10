@@ -1,7 +1,8 @@
 package it.xpug.generic.db;
 
 import static java.lang.String.*;
-import it.xpug.hangman.main.DatabaseConfiguration;
+import it.xpug.mastermind.main.DatabaseConfiguration;
+
 import java.io.*;
 import java.sql.*;
 import java.util.*;

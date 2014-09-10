@@ -1,4 +1,4 @@
-package it.xpug.hangman.main;
+package it.xpug.mastermind.main;
 
 public class Game {
 	private String game_id;

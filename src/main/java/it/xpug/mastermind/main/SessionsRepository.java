@@ -1,13 +1,11 @@
-package it.xpug.hangman.main;
+package it.xpug.mastermind.main;
 
 import static java.lang.Math.abs;
 import static java.lang.String.valueOf;
 import it.xpug.generic.db.Database;
 import it.xpug.generic.db.ListOfRows;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 public class SessionsRepository {
@@ -21,6 +19,8 @@ public class SessionsRepository {
 	}
 
 	public PlayerSession createSession(String id_player) {
+		//crea e inserisce in db una sessione
+		
 		PlayerSession session = new PlayerSession(valueOf(abs(random.nextLong())), id_player);
 		String sql = "insert into sessions (player_id, session_id) values (?, ?)";
 		database.execute(sql, session.player_id(), session.session_id());
@@ -28,6 +28,8 @@ public class SessionsRepository {
 	}
 
 	public PlayerSession findSession(String sessionId) {
+		//trova la sessione in base all'id
+		
 		try{String sql = "select * from sessions where session_id = ?";
 		ListOfRows rows = database.select(sql, sessionId);
 		HashMap<String, Object> row = (HashMap<String, Object>) rows.get(0);
@@ -41,6 +43,8 @@ public class SessionsRepository {
 	}
 
 	public void delete_session(String parameter) {
+		//cancella una sessione
+		
 		String sql = "delete from sessions where session_id = ?";
 		database.execute(sql, parameter);
 		

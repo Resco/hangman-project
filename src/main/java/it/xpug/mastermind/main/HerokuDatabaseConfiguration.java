@@ -1,4 +1,4 @@
-package it.xpug.hangman.main;
+package it.xpug.mastermind.main;
 
 import java.net.URI;
 import java.sql.Connection;

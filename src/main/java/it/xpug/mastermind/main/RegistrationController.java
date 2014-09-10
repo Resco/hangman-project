@@ -1,4 +1,4 @@
-package it.xpug.hangman.main;
+package it.xpug.mastermind.main;
 
 import java.io.IOException;
 
@@ -16,6 +16,8 @@ public class RegistrationController extends Controller {
 	}
 
 	public void service() throws IOException{
+		//gestisce l'inserimento del nuovo utente in db
+		
 		String nick = request.getParameter("nickname");
 		String pw = request.getParameter("password");
 		String re_pw = request.getParameter("re_password");

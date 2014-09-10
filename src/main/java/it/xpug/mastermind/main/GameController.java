@@ -1,4 +1,4 @@
-package it.xpug.hangman.main;
+package it.xpug.mastermind.main;
 
 import java.io.IOException;
 
@@ -23,13 +23,15 @@ public class GameController extends Controller{
 	}
 
 	public void new_game_service() throws IOException {
+		//crea una nuova partita
+		
 		for (Cookie cookie : request.getCookies()) {
 			PlayerSession session = s_repository.findSession(cookie.getValue());
 			if (session != null) {
-				//aggiungi una partita con i dati utili
 				Game game = g_repository.createGame(session.player_id());
 				String[] name = {"game_id","code"};
 				String[] value = {game.game_id(),game.code()};
+				//usato per test
 				System.out.println(game.code());
 				writeBody(toJson(name, value));
 			}
@@ -37,21 +39,17 @@ public class GameController extends Controller{
 	}
 
 	public void move_service() throws IOException {
+		//gestisce le mosse, rispondendo con il risultato e salvando in db
+		//la mossa stessa
 		
-		//prende il codice da indovinare, dato l'id partita
 		String code = g_repository.find_game_code(request.getParameter("game_id"));
-		//check sulla lunghezza
 		if(request.getParameter("sequence").length()<4){
 			writeBody(toJson("description", "short"));
 			return;
 		}
-		//calcola il risultato
 		String answer = compareCodes(code, request.getParameter("sequence"));
-		//prende il nome del player, dato l'id partita
 		String player = g_repository.find_game_player(request.getParameter("game_id"));
-		//prende la stringa della mossa
 		String move = request.getParameter("sequence");
-		//crea un oggetto move
 		Move mov = m_repository.createMove(request.getParameter("game_id"), player, move, answer);
 		//setta il punteggio della partita a seguito della mossa
 		g_repository.set_score(request.getParameter("game_id"));
@@ -71,7 +69,7 @@ public class GameController extends Controller{
 			String[] name = {"move_id","move", "result",
 					"description", "average" , "games"};
 			String[] value = {mov.move_id() + "", mov.move(), mov.result(),
-					player, avg + "", games+""};
+					player, String.format("%.2f", avg) + "", games+""};
 			writeBody(toJson(name, value));
 			return;
 		}
@@ -81,6 +79,8 @@ public class GameController extends Controller{
 	}
 
 	private String compareCodes(String codeToGuess, String codeSubmitted) {
+		//logica principale del gioco: data una stringa, calcola i + e i -
+		
 		String answer = "";
 		Boolean checked[] = {false, false, false, false};
 		for(int i=0; i<4; i++){

@@ -1,6 +1,6 @@
 package it.xpug.generic.db;
 
-import it.xpug.hangman.main.DatabaseConfiguration;
+import it.xpug.mastermind.main.DatabaseConfiguration;
 
 import java.sql.*;
 

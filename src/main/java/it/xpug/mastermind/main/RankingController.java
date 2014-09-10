@@ -1,4 +1,4 @@
-package it.xpug.hangman.main;
+package it.xpug.mastermind.main;
 
 import it.xpug.generic.db.ListOfRows;
 
@@ -21,6 +21,9 @@ public class RankingController extends Controller{
 	}
 	
 	public void service() throws IOException {
+		//restituisce i dati per la costruzione della tabella
+		//di ranking totale
+		
 		ListOfRows rows = p_repository.select_global_rank();
 		String[] a1={"pos", "id","avg", "games"};
 		String json="[";
@@ -28,7 +31,7 @@ public class RankingController extends Controller{
 			String id= (String) rows.get(i).get("player_id");
 			Float avg = (Float) rows.get(i).get("average");
 			int games = (Integer) rows.get(i).get("num_games");
-			String[] a2 = {""+(i+1), id, ""+avg, ""+games};
+			String[] a2 = {""+(i+1), id, ""+String.format("%.2f", avg), ""+games};
 			if (i == 0) {
 				json = json + toJson(a1,a2);
 			} else {
@@ -44,6 +47,9 @@ public class RankingController extends Controller{
 	}
 	
 	public void service_player() throws IOException {
+		//restituisce i dati utili per ricostruire lo storico delle
+		//partite di un singolo giocatore
+		
 		String nickname = request.getParameter("nickname");
 		ListOfRows rows = g_repository.select_player_games(nickname);
 		String[] a1={"started", "finished","score",};

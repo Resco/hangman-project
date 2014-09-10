@@ -36,7 +36,7 @@ createuser --no-superuser --createdb --no-createrole $dbuser
 psql -tAc "ALTER USER $dbuser WITH PASSWORD '$dbpassword'" $dbname
 
 # load all sql scripts in database
-cat $src/???_*.sql $src/seed.sql | psql $dbname
+cat $src/???_*.sql | psql $dbname
 
 # grant all privileges on all tables to our user
 for table in $(psql -tAc "select relname from pg_stat_user_tables" $dbname); do

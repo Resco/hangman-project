@@ -23,6 +23,6 @@ for table in $(psql -tAc "select relname from pg_stat_user_tables" $url); do
 done
 
 # load all sql scripts in database
-cat $src/???_*.sql $src/seed.sql | psql $url
+cat $src/???_*.sql  | psql $url
 
 echo "OK"

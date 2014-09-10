@@ -1,4 +1,4 @@
-package it.xpug.hangman.main;
+package it.xpug.mastermind.main;
 
 import static java.lang.Integer.*;
 import it.xpug.generic.db.*;
@@ -18,7 +18,7 @@ public class Main {
 		else
 			configuration = new PropertyFileDatabaseConfiguration("database.properties");
 
-		ReusableJettyApp app = new ReusableJettyApp(new HangmanServlet(configuration));
+		ReusableJettyApp app = new ReusableJettyApp(new MastermindServlet(configuration));
 		app.start(valueOf(port), "src/main/webapp");
 	}
 }
