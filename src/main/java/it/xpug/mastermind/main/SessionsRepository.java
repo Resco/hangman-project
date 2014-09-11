@@ -5,6 +5,8 @@ import static java.lang.String.valueOf;
 import it.xpug.generic.db.Database;
 import it.xpug.generic.db.ListOfRows;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -21,9 +23,10 @@ public class SessionsRepository {
 	public PlayerSession createSession(String id_player) {
 		//crea e inserisce in db una sessione
 		
+		Timestamp started = new Timestamp(new Date().getTime());
 		PlayerSession session = new PlayerSession(valueOf(abs(random.nextLong())), id_player);
-		String sql = "insert into sessions (player_id, session_id) values (?, ?)";
-		database.execute(sql, session.player_id(), session.session_id());
+		String sql = "insert into sessions (player_id, session_id, started) values (?, ?, ?)";
+		database.execute(sql, session.player_id(), session.session_id(), started);
 		return session;
 	}
 
@@ -49,6 +52,8 @@ public class SessionsRepository {
 		database.execute(sql, parameter);
 		
 	}
+
+	
 	
 	
 

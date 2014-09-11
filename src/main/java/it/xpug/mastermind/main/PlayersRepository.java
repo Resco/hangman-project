@@ -27,7 +27,7 @@ public class PlayersRepository {
 		
 		String sql = "select * from players where player_id = ?";
 		ListOfRows rows = database.select(sql, nick);
-		return rows.size() != 0;
+		return rows.size()!=0;
 	}
 
 	public boolean correctPassword (String nick, String password){

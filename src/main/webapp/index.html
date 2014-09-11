@@ -18,13 +18,13 @@
 			
 			<div id="welcome_text">Welcome to my Mastermind! Please login or register...</div>
 			
-			<div id='buttons' style="display: none">
+			<div id='buttons' class="inside_navigation" style="display: none">
 				<a href='javascript:on_game()' class="links"> Game </a>
 				&nbsp;|&nbsp;
 				<a href='javascript:on_g_rank()' class="links"> Ranking </a>
 			</div>
 			
-			<div id='target_general' style="display: none">
+			<div id='target_general' class="inside_navigation" style="display: none">
 			</div>
 				
 		</div>
@@ -47,7 +47,7 @@
 			        <input type="submit" value="Login" id="log_submit"/>
 			        
 	   			</form>
-	   			<img id="waiting_log" src="spinner.gif" style="display: none"></img>
+	   			<img id="waiting_log" alt="wait" src="spinner.gif" style="display: none">
 			</section>
 				
 			<section id='reg' class='outside'>
@@ -67,7 +67,7 @@
 						
 				    <input type="submit" value="Register" id="reg_submit"/>    
 	      		</form>
-	      		<img id="waiting_reg" src="spinner.gif" style="display: none"></img>
+	      		<img id="waiting_reg" alt="wait" src="spinner.gif" style="display: none">
 			</section>	
 			
 			<!--INSIDE-->
@@ -83,18 +83,18 @@
 				
 				<form id='move'>	
 					<label for='seq'>Sequence</label><br/>
-				    <input type='text' autocomplete="off" name="seq" value="" id='seq' maxlength="4"/><br/>
+				    <input type='text' autocomplete="off" name="seq" value="" id='seq' maxlength="4" disabled="disabled"/><br/>
 				    <input type="submit" value="Send" id="send_submit" disabled="disabled"/> 
-				    <img id="waiting_send" src="spinner.gif" style="display: none"></img>   
+				    <img id="waiting_send" alt="wait" src="spinner.gif" style="display: none">   
 				</form>
-	      		<img id="waiting_new_game" src="spinner.gif" style="display: none"></img>   
+	      		<img id="waiting_new_game" alt="wait" src="spinner.gif" style="display: none">  
 			</section>
 			
 			<section id='rank' class='inside' style="display: none">
 				<h3 id="ranking_title">General ranking</h3>
 				<div id='ranking'>
 				</div>
-				<img id="waiting_rank" src="spinner.gif" style="display: none"></img>   
+				<img id="waiting_rank" alt="wait" src="spinner.gif" style="display: none">  
 			</section>
 							
 		</div>
@@ -107,7 +107,7 @@
 		<script id='navigate-template' type="application/x-tmpl-mustache">
       		Welcome {{description}}. Your average is {{average}} on {{games}} games.
       		<a href='javascript:on_logout()'> Logout </a>
-		<img id="waiting_logout" src="spinner.gif" style="display: none"></img>
+		<img id="waiting_logout" src="spinner.gif" alt="wait" style="display: none">
 		</script>
     	
     	<script id='moves-template' type="application/x-tmpl-mustache">
@@ -144,7 +144,7 @@
 			</tr>
 			{{/players}}
 		</table>
-		</script>
+	</script>
 		
 		<script id="history_template" type="application/x-tmpl-mustache">
 		<table border="1">
@@ -165,7 +165,7 @@
 		<button type="button" id="back">Back</button>
 		<script>$("#back").click(on_g_rank);</script>
 		
-	</script>
+	
 	
 		<script src='/js/lib/jquery-1.10.2.min.js'></script>
 		<script src='/js/lib/mustache.js'></script>

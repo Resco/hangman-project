@@ -19,6 +19,7 @@ public class RegistrationController extends Controller {
 		//gestisce l'inserimento del nuovo utente in db
 		
 		String nick = request.getParameter("nickname");
+		nick = nick.toLowerCase();
 		String pw = request.getParameter("password");
 		String re_pw = request.getParameter("re_password");
 		String mail = request.getParameter("mail");

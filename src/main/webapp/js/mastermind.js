@@ -12,8 +12,7 @@ $(document).ready(function() {
 	$("#newgame").click(on_new_game);
 	
 
-	$("#buttons").hide();
-	$("#target_general").hide();
+	$(".inside_navigation").hide();
 	$(".inside").hide();;
 	check_log();
 });
@@ -23,8 +22,7 @@ $(document).ready(function() {
 function on_register() {
 	$(".register_input").attr("style", "border-color: default");
 	$(".login_input").attr("style", "border-color: default");
-	$("#reg_submit").hide();
-	$("#waiting_reg").show();
+	disable_reg_form();
 	
 	$.ajax({
 		url: '/register',
@@ -43,8 +41,7 @@ return false;
 
 function on_register_success(data) {
 	$("#display").attr("style", "color:red");
-	$("#reg_submit").show();
-	$("#waiting_reg").hide();
+	enable_reg_form();
 	if(data.description=="pw_leng"){
 		$("#display").text("Password too short (8 characters at least)");
 		$("#password_reg").attr("style", "border-color:red");
@@ -73,17 +70,12 @@ function on_register_success(data) {
 	
 }
 
-function on_register_error(data) {
-	$("#display").text(JSON.stringify(data.responseJSON));
-}
-
 <!--Login-->
 
 function on_login() {
 	$(".register_input").attr("style", "border-color: default");
 	$(".login_input").attr("style", "border-color: default");
-	$("#log_submit").hide();
-	$("#waiting_log").show();
+	disable_log_form();
 	
 	$.ajax({
 		url: '/authenticate',
@@ -99,8 +91,7 @@ return false;
 }
 
 function on_login_success(data) {
-	$("#log_submit").show();
-	$("#waiting_log").hide();
+	enable_log_form();
 	$("#display").attr("style", "color:red");
 	if(data.description=="pw"){
 		$("#display").text("Try another password");
@@ -121,11 +112,11 @@ function on_login_success(data) {
 	
 	session_id = data.session_id;
 	
-	$("#buttons").show();
-	$("#target_general").show();
+	$(".inside_navigation").show();
 	$("#welcome_text").hide();
 	
-	$("#send_submit").attr("disabled","disabled");
+	disable_move_form();
+	$("#waiting_send").hide();
 	
 	render_template_navigate(data.description, data.average, data.games);
 	
@@ -146,10 +137,12 @@ function render_template_navigate(name, avg, games) {
 <!--Check Log-->
 
 function check_log() {
+	disable_log_form();
 	$.ajax({
 		url: '/logged',
 		method: 'get',
 		success: on_login_success,
+		error: on_check_log_error,
 	})
 }
 
@@ -159,7 +152,6 @@ function on_new_game() {
 	$("#move").hide();
 	$("#info_game").hide();
 	$("#waiting_new_game").show();      			
-	//creazione della partita
 	$.ajax({
 		url: '/newgame',
 		method: 'get',
@@ -172,7 +164,7 @@ function on_new_game_success (data){
 	$("#move").show();
 	$("#info_game").show();
 	$("#waiting_new_game").hide();
-	$("#send_submit").removeAttr("disabled");
+	enable_move_form();
 	$("#answer").text("");
 	$("#code").text(data.code);
 	$("#general").text("Try to guess, if you can... ");
@@ -186,8 +178,8 @@ function on_new_game_success (data){
 <!--Move-->
 
 function on_move (){
-	$("#send_submit").hide();
-	$("#waiting_send").show();
+	disable_move_form();
+	
 	$.ajax({
 		url: '/move',
 		method: 'post',
@@ -202,8 +194,8 @@ function on_move (){
 }
 
 function on_move_success (data){
-	$("#send_submit").show();
-	$("#waiting_send").hide();
+	enable_move_form();
+	
 	if(data.description=="short"){
 		$("#display").attr("style", "color:red");
 		$("#display").text("Insert a 4 digits sequence.");
@@ -290,13 +282,12 @@ function on_logout_success(data){
 	
 	$("#display").html("&nbsp;");
 	
-	$("#buttons").hide();
-	$("#target_general").hide();
+	$(".inside_navigation").hide();
 	$("#welcome_text").show();
 	
 	$("#general").text("Let's play a new game");
 	$("#answer").html("&nbsp;");
-	$("#send_submit").attr("disabled", "disabled");
+	disable_move_form();
 	
 	$(".inside").hide();
 	$(".outside").show();
@@ -321,4 +312,63 @@ function on_game(){
 function on_error(data) {
 	window.alert(JSON.stringify(data.responseJSON));
 }
-      		
+
+function on_check_log_error(data) {
+	enable_log_form();
+}
+
+<!--Enable and Disable Move-->
+
+function disable_move_form() {
+	$("#send_submit").attr("disabled","disabled");
+	$("#send_submit").hide();
+	$("#seq").attr("disabled","disabled");
+	$("#waiting_send").show();
+}
+
+function enable_move_form() {
+	$("#send_submit").removeAttr("disabled");
+	$("#send_submit").show();
+	$("#seq").removeAttr("disabled");
+	$("#waiting_send").hide();
+}
+
+<!--Enable and Disable Log-->
+
+function disable_log_form() {
+	$("#nick_login").attr("disabled","disabled");
+	$("#password_login").attr("disabled","disabled");
+	$("#log_submit").attr("disabled","disabled");
+	$("#log_submit").hide();
+	$("#waiting_log").show();
+}
+
+function enable_log_form() {
+	$("#nick_login").removeAttr("disabled");
+	$("#password_login").removeAttr("disabled");
+	$("#log_submit").removeAttr("disabled");
+	$("#log_submit").show();
+	$("#waiting_log").hide();
+}
+
+<!--Enable and Disable Reg-->
+
+function disable_reg_form() {
+	$("#nick_reg").attr("disabled","disabled");
+	$("#password_reg").attr("disabled","disabled");
+	$("#mail_reg").attr("disabled","disabled");
+	$("#re_password_reg").attr("disabled","disabled");
+	$("#reg_submit").attr("disabled","disabled");
+	$("#reg_submit").hide();
+	$("#waiting_reg").show();
+}
+
+function enable_reg_form() {
+	$("#nick_reg").removeAttr("disabled");
+	$("#password_reg").removeAttr("disabled");
+	$("#mail_reg").removeAttr("disabled");
+	$("#re_password_reg").removeAttr("disabled");
+	$("#reg_submit").removeAttr("disabled");
+	$("#reg_submit").show();
+	$("#waiting_reg").hide();
+}

@@ -21,6 +21,7 @@ public class AuthenticationController extends Controller {
 		//controlla la presenza o meno di un utente in db ( e controllo password)
 		
 		String nick = request.getParameter("nickname");
+		nick = nick.toLowerCase();
 		String pw = request.getParameter("password");
 		if(!p_repository.nicknameExists(nick)){
 			writeBody(toJson("description", "nick_exist"));
