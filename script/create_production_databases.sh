@@ -19,7 +19,7 @@ url=$(heroku config | grep DATABASE_URL | awk '{ print $2 }')
 
 # drop all tables
 for table in $(psql -tAc "select relname from pg_stat_user_tables" $url); do
-  psql -tAc "DROP TABLE $table " $url
+  psql -tAc "DROP TABLE $table CASCADE" $url
 done
 
 # load all sql scripts in database

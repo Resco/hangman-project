@@ -82,25 +82,37 @@ public class GameController extends Controller{
 		//logica principale del gioco: data una stringa, calcola i + e i -
 		
 		String answer = "";
-		Boolean checked[] = {false, false, false, false};
+		Boolean toGuess[] = {false, false, false, false};
+		Boolean submitted[] = {false, false, false, false};
 		for(int i=0; i<4; i++){
 			if(codeSubmitted.charAt(i)==codeToGuess.charAt(i)){
-				checked[i]=true;
+				submitted[i]=true;
+				toGuess[i]=true;
 				answer = answer + "+";
 			}
 		}
-		for (int j=0; j<4; j++){
-			if(checked[j]==false){
-				for(int k=0; k<4; k++){
-					if(checked[k]==false){
-						if(codeSubmitted.charAt(j)==codeToGuess.charAt(k)){
-							answer = answer + "-";
+		
+		//scorro tutte le lettere della mossa
+		for(int j=0; j<4; j++){
+			//se la lettera non è stata ancora assegnata
+			if(submitted[j]==false){
+				//scorro le lettere del codice
+				for(int y=0;y<4;y++){
+					//se la lettera non è ancora stata assegnata
+					if(toGuess[y]==false){
+						//metti - se c'è coincidenza e segna come controllate
+						if(codeSubmitted.charAt(j)==codeToGuess.charAt(y)){
+							submitted[j]=true;
+							toGuess[y]=true;
+							answer=answer + "-";
 							break;
 						}
 					}
 				}
 			}
 		}
+		
+		
 		return answer;
 		
 	}
