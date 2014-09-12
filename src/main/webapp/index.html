@@ -75,18 +75,32 @@
 			<section id='new_g' class='inside' style="display: none">
 				<h3>Your game</h3>
 				<div id='info_game'>
-					<button type="button" id="newgame">New Game</button>
+					<div id="button_space">
+						<button type="button" id="newgame">New Game</button>
+						<div id="button_info">Press the button to abandon<BR>
+									and start a new game</div>
+					</div>			
 					<p id='general'>Let's play a new game!</p>
 					<p id='answer'>&nbsp;</p>
 					<p id='game_code' style='display:none'>&nbsp;</p>
+					
+					<form id='move'>	
+					<label for='seq'>Sequence</label><br/>
+					<input type='text' autocomplete="off" name="seq" value="" id='seq' maxlength="4" disabled="disabled"/><br/>
+					<input type="submit" value="Send" id="send_submit" disabled="disabled"/> 
+					<img id="waiting_send" alt="wait" src="spinner.gif" style="display: none">   
+				</form>
 				</div>
 				
-				<form id='move'>	
-					<label for='seq'>Sequence</label><br/>
-				    <input type='text' autocomplete="off" name="seq" value="" id='seq' maxlength="4" disabled="disabled"/><br/>
-				    <input type="submit" value="Send" id="send_submit" disabled="disabled"/> 
-				    <img id="waiting_send" alt="wait" src="spinner.gif" style="display: none">   
-				</form>
+				<div id="rules">
+				<p>Try to guess the secret code!</p>
+				<p>Write a sequence made of 4 digits, from 1 to 6.</p>
+				<p>A PLUS means one number is in the right place.</p>
+				<p>A MINUS means one number is present, but misplaced.</p>
+				</div>
+				
+				
+				
 	      		<img id="waiting_new_game" alt="wait" src="spinner.gif" style="display: none">  
 			</section>
 			

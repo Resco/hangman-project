@@ -12,6 +12,16 @@ h3{
     font-size: 20px;
 }
 
+header{
+    width: 800px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
+}
+
 #principal{
     width: 800px;
     min-height: 300px; 
@@ -30,6 +40,17 @@ h3{
     margin-right: auto;
     padding: 2px;
     background-color: #B3B7B7;
+    overflow: hidden
+}
+
+footer{
+    width: 800px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
     overflow: hidden
 }
 
@@ -61,23 +82,47 @@ h3{
     float: left;
     margin-left: 10px;
 }
-   
-footer{
-    width: 800px;
-    margin-bottom: 5px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 5px;
+
+#rules{
+    float: right;
+}
+
+#info_game{
+    float: left;
+}
+
+#new_game{
+    float: left;
+}
+
+#button_info{
+    float: right;
+    margin-left: 10px;
+}
+
+#button_space{
     border-style: solid;
     border-width: 1px;
-    overflow: hidden
-}
-header{
-    width: 800px;
-    margin-bottom: 5px;
-    margin-left: auto;
-    margin-right: auto;
+    overflow: hidden;
     padding: 5px;
-    border-style: solid;
-    border-width: 1px;
 }
+
+#general{
+    margin-top: 30px;
+}
+
+
+table {
+    border-collapse: collapse;
+}
+
+table, tr, th, td{
+   border: 1px solid black;
+
+}
+
+tr,th,td{
+    padding: 5px;
+}
+
+

@@ -58,7 +58,16 @@ public class RankingController extends Controller{
 			Timestamp started= (Timestamp) rows.get(i).get("started");
 			Timestamp finished = (Timestamp) rows.get(i).get("finished");
 			int score = (Integer) rows.get(i).get("score");
-			String[] a2 = {started+"", finished+"", ""+score};
+			String finished_s;
+			if(finished==null){
+				finished_s = "Not finished";
+			}
+			else{
+				finished_s = finished.toString();
+			}
+			
+			
+			String[] a2 = {started+"", finished_s, ""+score};
 			if (i == 0) {
 				json = json + toJson(a1,a2);
 			} else {
